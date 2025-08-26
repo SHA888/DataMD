@@ -1,6 +1,6 @@
 # DataMD - Enhanced Markdown with Data Format Support
 
-DataMD is a powerful Markdown flavor that supports embedding and processing various data formats directly in your documents using the `.mdd` extension.
+DataMD is a powerful Markdown flavor that supports embedding and processing various data formats directly in your documents using the `.dmd` extension.
 
 ## Supported Formats
 

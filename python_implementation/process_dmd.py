@@ -90,6 +90,7 @@ def process_dmd_file(input_file, output_file=None):
     return True
 
 
+
 def process_directory(directory):
     """Process all .dmd files in a directory"""
     directory = Path(directory)
@@ -101,6 +102,7 @@ def process_directory(directory):
     
     for dmd_file in dmd_files:
         process_dmd_file(str(dmd_file))
+
 
 
 def main():

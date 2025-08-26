@@ -69,15 +69,8 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 black isort
+        pip install -r dev-requirements.txt
+        pip install pre-commit
     
-    - name: Lint with flake8
-      run: |
-        flake8 python_implementation/ --count --select=E9,F63,F7,F82 --show-source --statistics
-        flake8 python_implementation/ --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
-    
-    - name: Check formatting with black
-      run: black --check python_implementation/
-    
-    - name: Check import sorting with isort
-      run: isort --check-only python_implementation/
+    - name: Run pre-commit (all files)
+      run: pre-commit run --all-files
