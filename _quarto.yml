@@ -1,0 +1,22 @@
+project:
+  type: default
+  render:
+    - "*.dmd"
+    - "*.md"
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    code-fold: true
+    filters:
+      - datamd.lua
+  pdf:
+    documentclass: scrartcl
+    filters:
+      - datamd.lua
+
+execute:
+  echo: false
+  warning: false
+  error: false

@@ -1,0 +1,42 @@
+# Business Intelligence Dashboard
+
+## Executive Summary
+
+This report provides key performance indicators for Q4 2024.
+
+## Sales Performance
+
+### Regional Sales Data
+{{ csv "data/sales.csv" }}
+
+### Revenue Analysis
+Total revenue by region shows strong growth in the North region with Widget A leading performance.
+
+## System Configuration
+
+### Current BI Settings
+{{ json "config/app_config.json" true }}
+
+## Financial Reports
+
+### Quarterly Financials
+{{ xlsx "reports/q4_financials.xlsx" "Summary" }}
+
+### Detailed P&L
+{{ xlsx "reports/q4_financials.xlsx" "PL_Statement" }}
+
+## Compliance Documentation
+
+### Audit Trail
+{{ pdf "documents/audit_report.pdf" 1 }}
+
+### Regulatory Filing
+{{ pdf "documents/sec_filing.pdf" }}
+
+## Usage Notes
+
+This dashboard updates automatically when source data files change. Perfect for:
+- Executive presentations
+- Board meetings
+- Regulatory reporting
+- Stakeholder updates

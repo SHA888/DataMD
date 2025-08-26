@@ -1,0 +1,14 @@
+# Simple DataMD Demo
+
+## Quick Start Example
+
+### Sales Data
+{{ csv "data/sales.csv" }}
+
+### App Configuration  
+{{ json "config/app_config.json" true }}
+
+### Notes
+- Files are processed dynamically during rendering
+- Tables are automatically formatted
+- JSON can be displayed as tables or formatted code blocks

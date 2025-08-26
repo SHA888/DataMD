@@ -1,0 +1,68 @@
+# DataMD Example Document
+
+This document demonstrates the capabilities of DataMD with various data formats.
+
+## Sales Data Analysis
+
+Here's our quarterly sales data:
+
+{{ csv "data/sales.csv" }}
+
+## Configuration Settings
+
+Current application configuration:
+
+{{ json "config/app_config.json" }}
+
+## Financial Report
+
+Excel spreadsheet with financial data:
+
+{{ xlsx "reports/financial_q4.xlsx" "Summary" }}
+
+## Document Analysis
+
+Extract text from the annual report PDF:
+
+{{ pdf "documents/annual_report.pdf" 1 }}
+
+## Receipt Processing
+
+OCR text extraction from a scanned receipt:
+
+{{ image_ocr "scans/receipt_001.jpg" "eng" }}
+
+## Presentation Video
+
+Embedded training video:
+
+{{ video "media/training_presentation.mp4" 800 600 true false }}
+
+## Advanced Features
+
+### PDF Table Extraction
+
+Extract tables from financial documents:
+
+{{ pdf_table "documents/financial_statements.pdf" 2 }}
+
+### Video Thumbnail
+
+Generate thumbnail from video at 10 seconds:
+
+{{ video_thumb "media/training_presentation.mp4" 10 }}
+
+### Multi-language OCR
+
+Process document in Spanish:
+
+{{ image_ocr "scans/spanish_document.jpg" "spa" }}
+
+## Data Processing Notes
+
+- CSV files support custom separators: `{{ csv "data.csv" ";" }}`
+- JSON can be flattened for tabular display: `{{ json "data.json" true }}`
+- Excel files support sheet selection by name or index
+- PDF processing can target specific pages
+- OCR supports multiple languages (requires appropriate Tesseract language packs)
+- Videos can be customized with width, height, controls, and autoplay options

@@ -1,0 +1,43 @@
+# Climate Data Analysis Study
+
+## Abstract
+
+This study analyzes temperature trends using multiple data sources and methodologies.
+
+## Dataset Overview
+
+### Primary Temperature Data
+{{ csv "data/climate_temperatures.csv" }}
+
+### Weather Station Metadata
+{{ json "data/station_info.json" }}
+
+## Methodology
+
+### Statistical Analysis Results
+{{ xlsx "analysis/climate_analysis.xlsx" "Results" }}
+
+### Model Parameters
+{{ json "analysis/model_config.json" true }}
+
+## Supporting Evidence
+
+### NOAA Report Extract
+{{ pdf "references/noaa_climate_report.pdf" 3 }}
+
+### Satellite Data Processing
+{{ image_ocr "figures/satellite_data_chart.png" }}
+
+## Supplementary Materials
+
+### Data Collection Video
+{{ video "media/field_collection.mp4" 640 480 true false }}
+
+## Research Applications
+
+Perfect for:
+- Academic publications
+- Grant proposals
+- Peer review submissions
+- Conference presentations
+- Thesis documentation

@@ -1,0 +1,17 @@
+Quarter,Product,Revenue,Units_Sold,Region
+Q1,Widget A,125000,2500,North
+Q1,Widget B,87500,1750,North
+Q1,Widget A,98000,1960,South
+Q1,Widget B,112000,2240,South
+Q2,Widget A,135000,2700,North
+Q2,Widget B,95000,1900,North
+Q2,Widget A,108000,2160,South
+Q2,Widget B,118000,2360,South
+Q3,Widget A,142000,2840,North
+Q3,Widget B,102000,2040,North
+Q3,Widget A,115000,2300,South
+Q3,Widget B,125000,2500,South
+Q4,Widget A,158000,3160,North
+Q4,Widget B,110000,2200,North
+Q4,Widget A,128000,2560,South
+Q4,Widget B,135000,2700,South

@@ -1,0 +1,44 @@
+# API Documentation with Live Data
+
+## Configuration Reference
+
+### Default Settings
+{{ json "config/api_defaults.json" }}
+
+### Environment Variables
+{{ csv "config/env_variables.csv" }}
+
+## Database Schema
+
+### Table Definitions
+{{ xlsx "docs/database_schema.xlsx" "Tables" }}
+
+### Relationships
+{{ xlsx "docs/database_schema.xlsx" "Relationships" }}
+
+## API Examples
+
+### Sample Request/Response
+{{ json "examples/api_sample.json" true }}
+
+## Error Logs Analysis
+
+### Recent Error Patterns
+{{ pdf "logs/error_analysis.pdf" 2 }}
+
+### System Monitoring
+{{ image_ocr "monitoring/dashboard_screenshot.png" }}
+
+## Demo Video
+
+### API Usage Tutorial
+{{ video "tutorials/api_demo.mp4" 800 600 true false }}
+
+## Use Cases
+
+Ideal for:
+- API documentation
+- System architecture docs
+- Configuration management
+- Troubleshooting guides
+- Developer onboarding
