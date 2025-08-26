@@ -17,6 +17,7 @@ format:
       - datamd.lua
 
 execute:
+  enabled: false
   echo: false
   warning: false
   error: false
