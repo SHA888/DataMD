@@ -11,7 +11,6 @@ import pdfplumber
 from PIL import Image
 import pytesseract
 import json
-import os
 
 
 class DataMDPreprocessor(Preprocessor):
