@@ -13,6 +13,7 @@ import pytesseract
 import json
 
 
+
 class DataMDPreprocessor(Preprocessor):
     def run(self, lines):
         new_lines = []

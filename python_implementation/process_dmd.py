@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 DataMD Processor Script
-Processes .mdd files using the Python-Markdown extension
+Processes .dmd files using the Python-Markdown extension
 """
 
 import os
