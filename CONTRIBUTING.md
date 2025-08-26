@@ -46,10 +46,10 @@ Thank you for your interest in contributing to DataMD! This document provides gu
    ```bash
    # Ubuntu/Debian
    sudo apt-get install tesseract-ocr tesseract-ocr-spa tesseract-ocr-fra
-   
+
    # macOS
    brew install tesseract tesseract-lang
-   
+
    # Windows - download from GitHub releases
    ```
 

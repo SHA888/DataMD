@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 
 from python_implementation.process_dmd import process_dmd_file

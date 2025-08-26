@@ -56,7 +56,7 @@ All DataMD shortcodes follow this pattern:
 ## Language Codes for OCR
 
 - `eng` - English
-- `spa` - Spanish  
+- `spa` - Spanish
 - `fra` - French
 - `deu` - German
 - `chi_sim` - Chinese Simplified

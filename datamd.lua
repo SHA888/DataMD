@@ -6,7 +6,7 @@ function Shortcode(s)
   if s.name == "csv" then
     local file = s.arguments[1]
     local sep = s.arguments[2] or ","
-    return pandoc.RawBlock("markdown", 
+    return pandoc.RawBlock("markdown",
       "```{python}\n" ..
       "#| echo: false\n" ..
       "#| output: asis\n" ..
@@ -17,7 +17,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error reading CSV: {e}')\n" ..
       "```")
-  
+
   -- JSON processing
   elseif s.name == "json" then
     local file = s.arguments[1]
@@ -47,7 +47,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error reading JSON: {e}')\n" ..
       "```")
-  
+
   -- Excel/XLSX processing
   elseif s.name == "xlsx" or s.name == "xls" or s.name == "xlsm" or s.name == "ods" then
     local file = s.arguments[1]
@@ -58,7 +58,7 @@ function Shortcode(s)
     elseif s.name == "ods" then
       engine = "odf"
     end
-    
+
     return pandoc.RawBlock("markdown",
       "```{python}\n" ..
       "#| echo: false\n" ..
@@ -73,7 +73,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error reading Excel file: {e}')\n" ..
       "```")
-  
+
   -- PDF processing
   elseif s.name == "pdf" then
     local file = s.arguments[1]
@@ -94,7 +94,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error reading PDF: {e}')\n" ..
       "```")
-  
+
   -- PDF tables extraction
   elseif s.name == "pdf_table" then
     local file = s.arguments[1]
@@ -120,7 +120,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error extracting PDF tables: {e}')\n" ..
       "```")
-  
+
   -- Image OCR processing
   elseif s.name == "image_ocr" then
     local file = s.arguments[1]
@@ -138,7 +138,7 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error processing image OCR: {e}')\n" ..
       "```")
-  
+
   -- Video embedding
   elseif s.name == "video" then
     local file = s.arguments[1]
@@ -146,24 +146,24 @@ function Shortcode(s)
     local height = s.arguments[3] or "480"
     local controls = s.arguments[4] or "true"
     local autoplay = s.arguments[5] or "false"
-    
+
     local controls_attr = ""
     local autoplay_attr = ""
-    
+
     if controls == "true" then
       controls_attr = " controls"
     end
-    
+
     if autoplay == "true" then
       autoplay_attr = " autoplay"
     end
-    
-    return pandoc.RawBlock("html", 
+
+    return pandoc.RawBlock("html",
       "<video width=\"" .. width .. "\" height=\"" .. height .. "\"" .. controls_attr .. autoplay_attr .. ">\n" ..
       "  <source src=\"" .. file .. "\" type=\"video/mp4\">\n" ..
       "  Your browser does not support the video tag.\n" ..
       "</video>")
-  
+
   -- Video thumbnail extraction
   elseif s.name == "video_thumb" then
     local file = s.arguments[1]
@@ -184,8 +184,8 @@ function Shortcode(s)
       "except Exception as e:\n" ..
       "    print(f'Error extracting video thumbnail: {e}')\n" ..
       "```")
-  
+
   end
-  
+
   return nil
 end

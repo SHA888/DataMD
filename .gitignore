@@ -1,0 +1,59 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.build/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+.env
+.env.*
+
+# Test & coverage
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Quarto
+.quarto/
+_site/
+*.qmd.html
+
+# Editors/IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build artifacts
+/dist/
+/build/
+*.egg-info/
+
+data/*~
+
+# Generated HTML from examples (avoid checking in rendered outputs)
+example.html
+simple_example.html
+*.tmp.html
+
+# Moviepy / media temp
+*.mp4.tmp
+*.mp3.tmp
+*.wav.tmp
+
+# Node (if used for docs in future)
+node_modules/

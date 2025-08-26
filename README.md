@@ -29,10 +29,10 @@ DataMD is a powerful Markdown flavor that supports embedding and processing vari
    ```bash
    # Ubuntu/Debian
    sudo apt-get install tesseract-ocr
-   
+
    # macOS
    brew install tesseract
-   
+
    # Windows
    # Download from https://github.com/UB-Mannheim/tesseract/wiki
    ```
