@@ -11,6 +11,7 @@ import time
 from pathlib import Path
 
 import markdown
+
 try:
     # When installed as a package (CLI path)
     from .datamd_ext import DataMDExtension
@@ -122,7 +123,10 @@ def watch_path(target_path):
         from watchdog.observers import Observer
     except Exception:
         print(
-            "Error: --watch requires the 'watchdog' package. Install with: pip install watchdog"
+            (
+                "Error: --watch requires the 'watchdog' package. Install with: "
+                "pip install watchdog"
+            )
         )
         sys.exit(1)
 
@@ -175,7 +179,9 @@ def watch_path(target_path):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Process Data Markdown (DataMD) (.dmd) files")
+    parser = argparse.ArgumentParser(
+        description="Process Data Markdown (DataMD) (.dmd) files"
+    )
     parser.add_argument("input", help="Input .dmd file or directory")
     parser.add_argument(
         "-o", "--output", help="Output HTML file (for single file processing)"

@@ -115,7 +115,9 @@ class DataMDPreprocessor(Preprocessor):
                         new_lines.append(video_html)
 
                     else:
-                        new_lines.append(f"Unknown Data Markdown (DataMD) command: {cmd}")
+                        new_lines.append(
+                            f"Unknown Data Markdown (DataMD) command: {cmd}"
+                        )
 
                 except Exception as e:
                     new_lines.append(
