@@ -1,4 +1,4 @@
-name: DataMD CI
+name: Data Markdown (DataMD) CI
 
 on:
   push:
@@ -32,18 +32,20 @@ jobs:
         pip install -r requirements.txt
         pip install jupyter
         pip install pytest pytest-cov
+        pip install -e .
 
     - name: Install Quarto
       uses: quarto-dev/quarto-actions/setup@v2
 
     - name: Test Python implementation
       run: |
-        python python_implementation/process_dmd.py simple_example.dmd
+        datamd simple_example.dmd
         test -f simple_example.html
 
     - name: Test Quarto rendering
       run: |
-        quarto render simple_example.dmd --to html
+        cp simple_example.dmd simple_example.qmd
+        quarto render simple_example.qmd --to html
         test -f simple_example.html
 
     - name: Run tests

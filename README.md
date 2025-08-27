@@ -1,6 +1,11 @@
-# DataMD - Enhanced Markdown with Data Format Support
+# Data Markdown (DataMD) - Enhanced Markdown with Data Format Support
 
-DataMD is a powerful Markdown flavor that supports embedding and processing various data formats directly in your documents using the `.dmd` extension.
+Data Markdown (DataMD) is a powerful Markdown flavor that supports embedding and processing various data formats directly in your documents using the `.dmd` extension.
+
+There are two ways to render Data Markdown, with the Python-only engine being the primary path:
+
+- Python-only engine (CLI `datamd`) that processes `.dmd` directly without Quarto.
+- Optional Quarto integration (uses `datamd.lua` to inject executable Python chunks). Note: Quarto does not execute `.dmd` directly; use a `.qmd` copy.
 
 ## Supported Formats
 
@@ -15,15 +20,24 @@ DataMD is a powerful Markdown flavor that supports embedding and processing vari
 
 ### Prerequisites
 
-1. **Quarto** (recommended approach):
+1. **Python Dependencies**:
    ```bash
-   # Download from https://quarto.org/docs/get-started/
+   pip install -r requirements.txt
    ```
 
-2. **Python Dependencies**:
+   Optional: enable live rebuilds support
    ```bash
-   pip install pandas openpyxl pdfplumber pytesseract pillow moviepy
+   # install optional extras for file watching
+   pip install .[watch]
    ```
+
+2. Optional — **Quarto** (for Quarto-based rendering):
+   - Download: https://quarto.org/docs/get-started/
+   - Linux .deb quick install:
+     ```bash
+     curl -LO https://quarto.org/download/latest/quarto-linux-amd64.deb
+     sudo dpkg -i quarto-linux-amd64.deb || sudo apt-get -f install -y
+     ```
 
 3. **Tesseract OCR** (for image text extraction):
    ```bash
@@ -35,6 +49,11 @@ DataMD is a powerful Markdown flavor that supports embedding and processing vari
 
    # Windows
    # Download from https://github.com/UB-Mannheim/tesseract/wiki
+   ```
+
+4. Optional — **FFmpeg** (for video/thumbnail helpers):
+   ```bash
+   sudo apt-get install ffmpeg
    ```
 
 ## Usage
@@ -74,12 +93,47 @@ Create files with the `.dmd` extension and use shortcode syntax to embed data:
 
 ## Rendering
 
-```bash
-# Render a single file
-quarto render report.dmd
+You can render using the primary Python engine (`datamd`) or, optionally, via Quarto (using a `.qmd` copy).
 
-# Render all .dmd files in project
-quarto render
+> Live rebuilds: run with `--watch` (requires `watchdog`).
+
+### Option A: Python-only engine (primary)
+
+Use the custom processor in `python_implementation/` (exposed via the `datamd` CLI) to execute shortcodes and emit HTML directly from `.dmd`:
+
+```bash
+# Single file
+python python_implementation/process_dmd.py simple_example.dmd
+# Output: simple_example.html
+```
+
+Project-level rendering can process all `.dmd` files in a directory as well:
+
+```bash
+# Process all .dmd files in a directory
+python python_implementation/process_dmd.py .
+
+### Option B: Optional Quarto integration
+
+Quarto only executes `.qmd` and `.ipynb`. For a `.dmd` file, copy it to `.qmd` and render:
+
+```bash
+# Single file
+cp simple_example.dmd simple_example.qmd
+quarto render simple_example.qmd --to html
+# Output: simple_example.html
+```
+
+Notes:
+- The project config `_quarto.yml` includes the `datamd.lua` filter.
+- The document should include front matter with an engine, e.g.:
+  ```yaml
+  ---
+  title: "My DataMD Report"
+  engine: jupyter
+  format: html
+  ---
+  ```
 ```
 
 ## Project Structure
@@ -93,9 +147,9 @@ your-project/
 ├── documents/          # PDF files
 ├── media/              # Video files
 ├── scans/              # Images for OCR
-└── *.dmd               # Your DataMD files
+└── *.dmd               # Your Data Markdown (DataMD) files
 ```
 
 ## Alternative: Python-Only Implementation
 
-For environments without Quarto, use the Python-Markdown extension approach (see `python_implementation/` directory).
+For environments without Quarto, use the Python-only engine described above (see `python_implementation/` directory).

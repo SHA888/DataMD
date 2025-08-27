@@ -1,4 +1,4 @@
--- DataMD Lua Filter for Quarto
+-- Data Markdown (DataMD) Lua filter for optional Quarto integration
 -- Processes custom shortcodes for data format embedding
 
 function Shortcode(s)

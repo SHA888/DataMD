@@ -1,6 +1,6 @@
 ---
 name: Feature Request
-about: Suggest an idea for DataMD
+about: Suggest an idea for Data Markdown (DataMD)
 title: '[FEATURE] '
 labels: enhancement
 assignees: ''

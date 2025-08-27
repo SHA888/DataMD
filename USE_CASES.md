@@ -1,6 +1,6 @@
-# DataMD Use Cases
+# Data Markdown (DataMD) Use Cases
 
-DataMD transforms static documentation into dynamic, data-driven reports. Here are real-world applications across industries:
+Data Markdown (DataMD) transforms static documentation into dynamic, data-driven reports. Here are real-world applications across industries:
 
 ## 🏢 **Business & Finance**
 
@@ -155,4 +155,4 @@ DataMD transforms static documentation into dynamic, data-driven reports. Here a
 - **Tool Integration**: Works with existing workflows
 - **Performance**: Fast rendering, efficient processing
 
-DataMD addresses the universal problem of static documentation in a data-driven world. Every industry that uses reports, documentation, or data analysis can benefit from this approach.
+Data Markdown (DataMD) addresses the universal problem of static documentation in a data-driven world. Every industry that uses reports, documentation, or data analysis can benefit from this approach.

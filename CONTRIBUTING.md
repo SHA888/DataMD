@@ -1,6 +1,6 @@
-# Contributing to DataMD
+# Contributing to Data Markdown (DataMD)
 
-Thank you for your interest in contributing to DataMD! This document provides guidelines for contributing to the project.
+Thank you for your interest in contributing to Data Markdown (DataMD)! This document provides guidelines for contributing to the project.
 
 ## Ways to Contribute
 
@@ -39,7 +39,7 @@ Thank you for your interest in contributing to DataMD! This document provides gu
    pip install -r dev-requirements.txt
    ```
 
-3. **Install Quarto** (optional but recommended)
+3. **Install Quarto** (optional)
    - Download from https://quarto.org
 
 4. **Install Tesseract OCR**
@@ -55,16 +55,18 @@ Thank you for your interest in contributing to DataMD! This document provides gu
 
 ## Testing Your Changes
 
-### Test with Quarto
-```bash
-quarto render example.dmd
-quarto render simple_example.dmd
-```
-
-### Test with Python-only
+### Test with Python-only (primary)
 ```bash
 python python_implementation/process_dmd.py example.dmd
 python python_implementation/process_dmd.py simple_example.dmd
+```
+
+### Test with Quarto (optional)
+```bash
+cp example.dmd example.qmd
+cp simple_example.dmd simple_example.qmd
+quarto render example.qmd
+quarto render simple_example.qmd
 ```
 
 ### Run Tests
@@ -159,4 +161,4 @@ Contributors will be recognized in:
 - Release notes for significant contributions
 - GitHub contributors page
 
-Thank you for helping make DataMD better for everyone! 🚀
+Thank you for helping make Data Markdown (DataMD) better for everyone! 🚀

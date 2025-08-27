@@ -1,16 +1,22 @@
 #!/usr/bin/env python3
 """
-DataMD Processor Script
+Data Markdown (DataMD) Processor Script
 Processes .dmd files using the Python-Markdown extension
 """
 
 import argparse
 import os
 import sys
+import time
 from pathlib import Path
 
 import markdown
-from datamd_ext import DataMDExtension
+try:
+    # When installed as a package (CLI path)
+    from .datamd_ext import DataMDExtension
+except ImportError:  # pragma: no cover
+    # When running the script directly (python python_implementation/process_dmd.py)
+    from datamd_ext import DataMDExtension
 
 
 def process_dmd_file(input_file, output_file=None):
@@ -39,7 +45,7 @@ def process_dmd_file(input_file, output_file=None):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DataMD Document</title>
+    <title>Data Markdown (DataMD) Document</title>
     <style>
         body {{
             font-family:
@@ -109,8 +115,67 @@ def process_directory(directory):
         process_dmd_file(str(dmd_file))
 
 
+def watch_path(target_path):
+    """Watch a file or directory for changes and reprocess .dmd files."""
+    try:
+        from watchdog.events import FileSystemEventHandler
+        from watchdog.observers import Observer
+    except Exception:
+        print(
+            "Error: --watch requires the 'watchdog' package. Install with: pip install watchdog"
+        )
+        sys.exit(1)
+
+    target = Path(target_path)
+    watch_dir = target if target.is_dir() else target.parent
+
+    class Handler(FileSystemEventHandler):
+        def __init__(self):
+            super().__init__()
+            self._last_run = {}
+
+        def _should_run(self, path_str, debounce=0.5):
+            now = time.time()
+            last = self._last_run.get(path_str, 0)
+            if now - last < debounce:
+                return False
+            self._last_run[path_str] = now
+            return True
+
+        def on_modified(self, event):
+            self._handle_event(event)
+
+        def on_created(self, event):
+            self._handle_event(event)
+
+        def _handle_event(self, event):
+            if event.is_directory:
+                return
+            p = Path(event.src_path)
+            # If specific file was given, only rebuild for that file
+            if target.is_file() and p.resolve() != target.resolve():
+                return
+            if p.suffix == ".dmd":
+                if self._should_run(str(p)):
+                    print(f"Change detected: {p}. Rebuilding...")
+                    process_dmd_file(str(p))
+
+    print(f"Watching: {target.resolve()} (press Ctrl+C to stop)")
+    event_handler = Handler()
+    observer = Observer()
+    observer.schedule(event_handler, str(watch_dir), recursive=target.is_dir())
+    observer.start()
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        print("Stopping watcher...")
+        observer.stop()
+    observer.join()
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Process DataMD (.dmd) files")
+    parser = argparse.ArgumentParser(description="Process Data Markdown (DataMD) (.dmd) files")
     parser.add_argument("input", help="Input .dmd file or directory")
     parser.add_argument(
         "-o", "--output", help="Output HTML file (for single file processing)"
@@ -123,13 +188,20 @@ def main():
 
     args = parser.parse_args()
 
-    if os.path.isfile(args.input):
+    is_file = os.path.isfile(args.input)
+    is_dir = os.path.isdir(args.input)
+
+    if is_file:
         if not args.input.endswith(".dmd"):
             print("Error: Input file must have .dmd extension")
             sys.exit(1)
         process_dmd_file(args.input, args.output)
-    elif os.path.isdir(args.input):
+        if args.watch:
+            watch_path(args.input)
+    elif is_dir:
         process_directory(args.input)
+        if args.watch:
+            watch_path(args.input)
     else:
         print(f"Error: {args.input} is not a valid file or directory")
         sys.exit(1)

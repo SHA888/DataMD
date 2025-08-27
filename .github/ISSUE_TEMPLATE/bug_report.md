@@ -1,6 +1,6 @@
 ---
 name: Bug Report
-about: Create a report to help us improve DataMD
+about: Create a report to help us improve Data Markdown (DataMD)
 title: '[BUG] '
 labels: bug
 assignees: ''
@@ -20,7 +20,7 @@ A clear description of what you expected to happen.
 
 ## Environment
 - OS: [e.g. Windows 10, macOS 12, Ubuntu 20.04]
-- DataMD version: [e.g. 1.0.0]
+- Data Markdown (DataMD) version: [e.g. 1.0.0]
 - Quarto version: [if using Quarto]
 - Python version: [e.g. 3.9.0]
 

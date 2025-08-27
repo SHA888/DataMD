@@ -1,5 +1,5 @@
 """
-DataMD Python-Markdown Extension
+Data Markdown (DataMD) Python-Markdown Extension
 Alternative implementation for environments without Quarto
 """
 
@@ -115,7 +115,7 @@ class DataMDPreprocessor(Preprocessor):
                         new_lines.append(video_html)
 
                     else:
-                        new_lines.append(f"Unknown DataMD command: {cmd}")
+                        new_lines.append(f"Unknown Data Markdown (DataMD) command: {cmd}")
 
                 except Exception as e:
                     new_lines.append(

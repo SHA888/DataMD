@@ -1,8 +1,8 @@
-# DataMD Syntax Reference
+# Data Markdown (DataMD) Syntax Reference
 
 ## Shortcode Format
 
-All DataMD shortcodes follow this pattern:
+All Data Markdown (DataMD) shortcodes follow this pattern:
 ```
 {{ command "filepath" [arg1] [arg2] [arg3] }}
 ```

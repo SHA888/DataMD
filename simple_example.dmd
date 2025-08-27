@@ -1,4 +1,10 @@
-# Simple DataMD Demo
+---
+title: "Simple Data Markdown (DataMD) Demo"
+engine: jupyter
+format: html
+---
+
+# Simple Data Markdown (DataMD) Demo
 
 ## Quick Start Example
 
