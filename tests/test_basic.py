@@ -6,7 +6,7 @@ from python_implementation.process_dmd import process_dmd_file
 def test_process_simple_example(tmp_path: Path):
     # Copy simple_example.dmd into temp dir to avoid polluting repo root
     repo_root = Path(__file__).resolve().parents[1]
-    src = repo_root / "simple_example.dmd"
+    src = repo_root / "examples" / "simple_example.dmd"
     dst = tmp_path / "simple_example.dmd"
     dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
 

@@ -3,12 +3,12 @@ import sys
 import tempfile
 from pathlib import Path
 
-import pytest
-
 # Add the python_implementation directory to the path
 sys.path.insert(
     0, os.path.join(os.path.dirname(__file__), "..", "python_implementation")
 )
+
+import pytest
 
 # Import after path modification
 from process_dmd import process_dmd_file

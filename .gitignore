@@ -43,12 +43,14 @@ Thumbs.db
 /build/
 *.egg-info/
 
+# Data files
 data/*~
 
 # Generated HTML from examples (avoid checking in rendered outputs)
 example.html
 simple_example.html
 *.tmp.html
+examples/*.html
 
 # Moviepy / media temp
 *.mp4.tmp
@@ -57,3 +59,8 @@ simple_example.html
 
 # Node (if used for docs in future)
 node_modules/
+
+# Test files
+tests/*.html
+tests/*.tmp.*
+test_video.html
