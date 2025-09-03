@@ -1,0 +1,53 @@
+---
+title: "Comprehensive DataMD Example"
+engine: jupyter
+format: html
+---
+
+# Comprehensive DataMD Example
+
+This example demonstrates all the features of DataMD including the newly implemented video thumbnail generation and enhanced PDF table extraction.
+
+## Video Processing
+
+### Video Player
+{{ video "media/sample.mp4" 640 480 true false }}
+
+### Video Thumbnail at 5 seconds
+{{ video_thumb "media/sample.mp4" 5 }}
+
+### Video Thumbnail at 10 seconds with custom dimensions
+{{ video_thumb "media/sample.mp4" 10 320 240 }}
+
+### Video Thumbnail with only width specified (height calculated)
+{{ video_thumb "media/sample.mp4" 15 640 }}
+
+## PDF Processing
+
+### Basic PDF Text Extraction
+{{ pdf "documents/report.pdf" }}
+
+### PDF Table Extraction (Page 1)
+{{ pdf_table "documents/report.pdf" 1 }}
+
+### PDF Table Extraction with Strategy Parameters
+{{ pdf_table "documents/report.pdf" 1 lines text }}
+
+## Data Processing
+
+### CSV Data
+{{ csv "data/sales.csv" }}
+
+### JSON Data (Flattened)
+{{ json "config/app_config.json" true }}
+
+### Excel Data
+{{ xlsx "data/report.xlsx" }}
+
+## Image OCR
+{{ image_ocr "scans/document.jpg" }}
+
+## Notes
+- Video thumbnails are generated as PNG files in the same directory as the source video
+- PDF table extraction supports different strategies for better accuracy
+- All file paths are relative to the .dmd file location

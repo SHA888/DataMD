@@ -36,6 +36,7 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 {{ pdf "document.pdf" }}             # All pages
 {{ pdf "document.pdf" 1 }}           # Specific page
 {{ pdf_table "report.pdf" 2 }}       # Extract tables from page 2
+{{ pdf_table "report.pdf" 2 lines text }}  # Extract tables with specific strategies
 ```
 
 ### Images (OCR)
@@ -51,6 +52,7 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 {{ video "clip.mp4" 800 600 }}                  # Custom dimensions
 {{ video "clip.mp4" 800 600 true false }}       # With controls, no autoplay
 {{ video_thumb "clip.mp4" 5 }}                  # Thumbnail at 5 seconds
+{{ video_thumb "clip.mp4" 10 320 240 }}         # Thumbnail at 10s with custom dimensions
 ```
 
 ## Language Codes for OCR
@@ -66,9 +68,25 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 
 *Note: Language packs must be installed in Tesseract*
 
+## PDF Table Extraction Strategies
+
+- `lines` - Detect tables based on lines (default)
+- `text` - Detect tables based on text alignment
+- `explicit` - Use explicit table boundaries
+
 ## File Path Guidelines
 
 - Paths are relative to the .dmd file location
 - Use forward slashes (/) for cross-platform compatibility
 - Enclose paths in double quotes
 - Ensure files exist before rendering
+
+## Video Thumbnail Parameters
+
+The `video_thumb` shortcode takes the following parameters:
+- `time` (required) - Time in seconds to extract the frame
+- `width` (optional) - Width of the thumbnail in pixels
+- `height` (optional) - Height of the thumbnail in pixels
+
+If only one dimension is provided, the other will be calculated to maintain aspect ratio.
+If no dimensions are provided, the original frame dimensions are used.

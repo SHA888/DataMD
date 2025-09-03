@@ -1,0 +1,9 @@
+# Video Thumbnail Test
+
+This is a test of the video thumbnail functionality.
+
+## Default Thumbnail
+{{ video_thumb "media/sample.mp4" 5 }}
+
+## Custom Size Thumbnail
+{{ video_thumb "media/sample.mp4" 10 320 240 }}

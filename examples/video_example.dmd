@@ -1,0 +1,27 @@
+---
+title: "Video Thumbnail Example"
+engine: jupyter
+format: html
+---
+
+# Video Thumbnail Example
+
+This example demonstrates the video thumbnail generation feature in DataMD.
+
+## Default Size Thumbnail
+{{ video_thumb "media/sample.mp4" 5 }}
+
+## Custom Size Thumbnail
+{{ video_thumb "media/sample.mp4" 10 320 240 }}
+
+## Width-Only Thumbnail (Height Calculated)
+{{ video_thumb "media/sample.mp4" 15 640 }}
+
+## Height-Only Thumbnail (Width Calculated)
+{{ video_thumb "media/sample.mp4" 20 0 480 }}
+
+## Notes
+- Thumbnails are generated as PNG files in the same directory as the source video
+- Files are named using the pattern: `[video_name]_thumb_[time]s.png`
+- Time is specified in seconds
+- If only one dimension is provided, the other is calculated to maintain aspect ratio
