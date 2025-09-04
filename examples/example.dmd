@@ -46,6 +46,12 @@ Extract tables from financial documents:
 
 {{ pdf_table "documents/financial_statements.pdf" 2 }}
 
+### PDF Table Extraction with Threshold Parameters
+
+Extract tables with custom sensitivity settings:
+
+{{ pdf_table "documents/financial_statements.pdf" 2 lines text snap=5 edge=10 intersect=3 }}
+
 ### Video Thumbnail
 
 Generate thumbnail from video at 10 seconds:
@@ -64,5 +70,9 @@ Process document in Spanish:
 - JSON can be flattened for tabular display: `{{ json "data.json" true }}`
 - Excel files support sheet selection by name or index
 - PDF processing can target specific pages
+- PDF table detection sensitivity can be controlled with threshold parameters:
+  - `snap=N` - Controls how close lines must be to be considered part of the same table
+  - `edge=N` - Controls how close edges must be to be considered part of the same table
+  - `intersect=N` - Controls how close edges must be to be considered intersecting
 - OCR supports multiple languages (requires appropriate Tesseract language packs)
 - Videos can be customized with width, height, controls, and autoplay options

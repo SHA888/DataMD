@@ -33,6 +33,12 @@ This example demonstrates all the features of DataMD including the newly impleme
 ### PDF Table Extraction with Strategy Parameters
 {{ pdf_table "documents/report.pdf" 1 lines text }}
 
+### PDF Table Extraction with Threshold Parameters
+{{ pdf_table "documents/report.pdf" 1 lines text snap=5 edge=10 intersect=3 }}
+
+### PDF Table Extraction with Mixed Parameters
+{{ pdf_table "documents/report.pdf" 2 text lines snap=3.5 edge=7 intersect=1.5 }}
+
 ## Data Processing
 
 ### CSV Data
@@ -50,4 +56,8 @@ This example demonstrates all the features of DataMD including the newly impleme
 ## Notes
 - Video thumbnails are generated as PNG files in the same directory as the source video
 - PDF table extraction supports different strategies for better accuracy
+- PDF table detection sensitivity can be controlled with threshold parameters:
+  - `snap=N` - Controls how close lines must be to be considered part of the same table
+  - `edge=N` - Controls how close edges must be to be considered part of the same table
+  - `intersect=N` - Controls how close edges must be to be considered intersecting
 - All file paths are relative to the .dmd file location

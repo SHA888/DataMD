@@ -37,6 +37,7 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 {{ pdf "document.pdf" 1 }}           # Specific page
 {{ pdf_table "report.pdf" 2 }}       # Extract tables from page 2
 {{ pdf_table "report.pdf" 2 lines text }}  # Extract tables with specific strategies
+{{ pdf_table "report.pdf" 2 lines text snap=3 edge=5 intersect=2 }}  # Extract tables with threshold parameters
 ```
 
 ### Images (OCR)
@@ -73,6 +74,19 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 - `lines` - Detect tables based on lines (default)
 - `text` - Detect tables based on text alignment
 - `explicit` - Use explicit table boundaries
+
+## PDF Table Detection Thresholds
+
+Table detection sensitivity can be controlled with the following optional parameters:
+
+- `snap=N` - Controls how close lines must be to be considered part of the same table (default: 3)
+- `edge=N` - Controls how close edges must be to be considered part of the same table (default: 5)
+- `intersect=N` - Controls how close edges must be to be considered intersecting (default: 2)
+
+Example:
+```markdown
+{{ pdf_table "report.pdf" 1 lines text snap=5 edge=10 intersect=3 }}
+```
 
 ## File Path Guidelines
 

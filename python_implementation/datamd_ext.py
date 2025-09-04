@@ -87,6 +87,29 @@ class DataMDPreprocessor(Preprocessor):
                         horizontal_strategy = args[1] if len(args) > 1 else "lines"
                         vertical_strategy = args[2] if len(args) > 2 else "lines"
 
+                        # Parse threshold parameters (new feature)
+                        snap_tolerance = None
+                        edge_tolerance = None
+                        intersection_tolerance = None
+
+                        # Look for threshold parameters in the remaining arguments
+                        for i in range(3, len(args)):
+                            if args[i].startswith("snap=") and len(args[i]) > 5:
+                                try:
+                                    snap_tolerance = float(args[i][5:])
+                                except ValueError:
+                                    pass
+                            elif args[i].startswith("edge=") and len(args[i]) > 5:
+                                try:
+                                    edge_tolerance = float(args[i][5:])
+                                except ValueError:
+                                    pass
+                            elif args[i].startswith("intersect=") and len(args[i]) > 10:
+                                try:
+                                    intersection_tolerance = float(args[i][10:])
+                                except ValueError:
+                                    pass
+
                         # Validate strategy parameters
                         valid_strategies = ["lines", "text", "explicit"]
                         if horizontal_strategy not in valid_strategies:
@@ -94,14 +117,26 @@ class DataMDPreprocessor(Preprocessor):
                         if vertical_strategy not in valid_strategies:
                             vertical_strategy = "lines"
 
-                        with pdfplumber.open(file_path) as pdf:
-                            # Use strategy parameters for table extraction
-                            tables = pdf.pages[page].extract_tables(
-                                {
-                                    "horizontal_strategy": horizontal_strategy,
-                                    "vertical_strategy": vertical_strategy,
-                                }
+                        # Prepare table settings with threshold parameters
+                        table_settings = {
+                            "horizontal_strategy": horizontal_strategy,
+                            "vertical_strategy": vertical_strategy,
+                        }
+
+                        # Add threshold parameters if provided
+                        if snap_tolerance is not None:
+                            table_settings["snap_tolerance"] = snap_tolerance
+                        if edge_tolerance is not None:
+                            table_settings["edge_tolerance"] = edge_tolerance
+                        if intersection_tolerance is not None:
+                            table_settings["intersection_tolerance"] = (
+                                intersection_tolerance
                             )
+
+                        with pdfplumber.open(file_path) as pdf:
+                            # Use strategy parameters and threshold parameters
+                            # for table extraction
+                            tables = pdf.pages[page].extract_tables(table_settings)
                             if tables:
                                 for i, table in enumerate(tables):
                                     if table and len(table) > 1:

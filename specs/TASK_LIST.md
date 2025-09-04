@@ -54,7 +54,7 @@ This document provides a detailed breakdown of tasks required to implement the e
   - **Details**: Add support for "lines", "text", "explicit" strategies for both horizontal and vertical table lines
   - **Testing Strategy**: Test each strategy with appropriate PDF samples, verify improved extraction accuracy
 
-- [ ] Add support for table detection thresholds
+- [x] Add support for table detection thresholds
   - **Details**: Implement parameters for controlling table detection sensitivity and minimum table size
   - **Testing Strategy**: Test with PDFs containing various table sizes, verify threshold parameters work as expected
 
