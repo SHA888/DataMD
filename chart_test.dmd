@@ -1,0 +1,10 @@
+# Sales Report
+
+## Bar Chart
+{{ chart "data/sales.csv" bar month sales title="Monthly Sales" }}
+
+## Line Chart
+{{ chart "data/sales.csv" line month profit title="Monthly Profit" }}
+
+## Pie Chart
+{{ chart "data/sales.csv" pie month sales title="Sales Distribution" }}

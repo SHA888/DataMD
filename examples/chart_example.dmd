@@ -1,0 +1,27 @@
+---
+title: "Chart Example"
+engine: jupyter
+format: html
+---
+
+# Chart Generation Example
+
+This example demonstrates the chart generation feature in DataMD.
+
+## Bar Chart
+{{ chart "data/sales.csv" bar month sales title="Monthly Sales" }}
+
+## Line Chart
+{{ chart "data/sales.csv" line month profit title="Monthly Profit" xlabel="Month" ylabel="Profit ($)" }}
+
+## Pie Chart
+{{ chart "data/sales.csv" pie month sales title="Sales Distribution" }}
+
+## Scatter Plot
+{{ chart "data/sales.csv" scatter sales profit title="Sales vs Profit" xlabel="Sales ($)" ylabel="Profit ($)" }}
+
+## Histogram
+{{ chart "data/sales.csv" histogram sales title="Sales Distribution" xlabel="Sales ($)" ylabel="Frequency" }}
+
+## Chart with Data Transformation
+{{ chart "data/sales.csv" bar month sales transform="filter:sales>1000" title="High Sales Months" }}

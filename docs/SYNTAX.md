@@ -56,6 +56,13 @@ All Data Markdown (DataMD) shortcodes follow this pattern:
 {{ video_thumb "clip.mp4" 10 320 240 }}         # Thumbnail at 10s with custom dimensions
 ```
 
+### Charts
+```markdown
+{{ chart "data/sales.csv" bar month sales title="Monthly Sales" }}
+{{ chart "data/profit.xlsx" line month profit xlabel="Month" ylabel="Profit ($)" }}
+{{ chart "data/market.json" pie category value title="Market Share" }}
+```
+
 ## Language Codes for OCR
 
 - `eng` - English
@@ -88,6 +95,34 @@ Example:
 {{ pdf_table "report.pdf" 1 lines text snap=5 edge=10 intersect=3 }}
 ```
 
+## Chart Parameters
+
+The `chart` shortcode takes the following parameters:
+- `chart_type` (required) - Type of chart to generate (bar, line, pie, scatter, histogram)
+- `x_column` (optional) - Column to use for X-axis values
+- `y_column` (optional) - Column to use for Y-axis values
+- `options` (optional) - Additional options in key=value format separated by spaces
+
+### Supported Chart Types
+
+- `bar` - Bar chart (default)
+- `line` - Line chart
+- `pie` - Pie chart
+- `scatter` - Scatter plot
+- `histogram` - Histogram
+
+### Chart Options
+
+- `title="Chart Title"` - Chart title
+- `xlabel="X Label"` - X-axis label
+- `ylabel="Y Label"` - Y-axis label
+- `transform="filter:age>25|sort:name"` - Data transformations to apply before charting
+
+Example:
+```markdown
+{{ chart "data/sales.csv" bar month sales title="Monthly Sales" xlabel="Month" ylabel="Sales ($)" }}
+```
+
 ## File Path Guidelines
 
 - Paths are relative to the .dmd file location
@@ -104,3 +139,31 @@ The `video_thumb` shortcode takes the following parameters:
 
 If only one dimension is provided, the other will be calculated to maintain aspect ratio.
 If no dimensions are provided, the original frame dimensions are used.
+
+## CLI Options
+
+The DataMD processor supports the following command-line options:
+
+### Basic Options
+- `input` - Input .dmd file or directory (required)
+- `-o, --output` - Output HTML file (for single file processing)
+- `--watch` - Watch for file changes (requires watchdog)
+- `--config` - Path to configuration file
+
+### Output Format Options
+- `-f, --format` - Output format (currently only HTML is supported)
+- `--style-body` - Custom CSS for body element
+- `--style-table` - Custom CSS for table elements
+- `--style-cell` - Custom CSS for table cell elements
+- `--style-header` - Custom CSS for table header elements
+- `--style-pre` - Custom CSS for pre elements
+- `--style-video` - Custom CSS for video elements
+- `--style-img` - Custom CSS for img elements
+
+### Debugging Options
+- `-v, --verbose` - Enable verbose output
+
+Example:
+```bash
+python process_dmd.py report.dmd -v --style-body "font-family: Arial; max-width: 1000px;"
+```

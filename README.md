@@ -10,7 +10,10 @@ DataMD supports embedding and processing:
 - **Documents**: PDF text extraction and table extraction
 - **Images**: OCR text extraction from images
 - **Videos**: Video embedding and thumbnail generation
+- **Charts**: Data visualization with customizable charts
 - **Structured Data**: Custom data transformations and filtering
+- **Security**: Path validation and input sanitization
+- **Performance**: Caching and large file optimization
 
 ## New Features Implemented
 
@@ -27,7 +30,38 @@ Extract tables from PDFs with advanced strategy options:
 ```
 {{ pdf_table "report.pdf" 2 }}                  # Basic table extraction
 {{ pdf_table "report.pdf" 2 lines text }}       # With strategy parameters
+{{ pdf_table "report.pdf" 2 lines text snap=3 edge=5 intersect=2 }}  # With threshold parameters
 ```
+
+### Chart Generation
+Create visualizations from data files:
+```
+{{ chart "data/sales.csv" bar month sales title="Monthly Sales" }}
+{{ chart "data/profit.xlsx" line month profit xlabel="Month" ylabel="Profit ($)" }}
+{{ chart "data/market.json" pie category value title="Market Share" }}
+```
+
+### Data Transformations
+Apply filtering, sorting, and aggregation to data:
+```
+{{ csv "data/customers.csv" "," "filter:age>25|sort:name|limit:10" }}
+{{ json "data/sales.json" true "groupby:region|sum:sales" }}
+```
+
+### Configuration System
+Customize behavior with JSON configuration files and environment variables.
+
+### Caching
+Automatic caching of processed data with intelligent invalidation.
+
+### CLI Enhancements
+Customizable output styling and verbose mode:
+```bash
+python python_implementation/process_dmd.py report.dmd -v --style-body "font-family: Arial;"
+```
+
+### Large File Handling
+Optimized processing for large data files with memory management.
 
 ## Installation
 
@@ -57,13 +91,22 @@ python python_implementation/process_dmd.py .
 python python_implementation/process_dmd.py . --watch
 ```
 
+### Verbose mode with custom styling:
+```bash
+python python_implementation/process_dmd.py report.dmd -v --style-body "font-family: Arial; max-width: 1000px;"
+```
+
 ## Syntax
 
 See [SYNTAX.md](SYNTAX.md) for detailed syntax reference.
 
 ## Examples
 
-See the [examples/](examples/) directory for sample DataMD files.
+See the [examples/](examples/) directory for sample DataMD files:
+- [Basic example](examples/example.dmd)
+- [Comprehensive example](examples/comprehensive_example.dmd)
+- [Video example](examples/video_example.dmd)
+- [Chart example](examples/chart_example.dmd)
 
 ## Contributing
 

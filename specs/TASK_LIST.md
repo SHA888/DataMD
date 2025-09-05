@@ -58,7 +58,7 @@ This document provides a detailed breakdown of tasks required to implement the e
   - **Details**: Implement parameters for controlling table detection sensitivity and minimum table size
   - **Testing Strategy**: Test with PDFs containing various table sizes, verify threshold parameters work as expected
 
-- [ ] Improve handling of merged cells
+- [x] Improve handling of merged cells
   - **Details**: Enhance table processing to better detect and handle merged cells in extracted tables
   - **Testing Strategy**: Test with PDFs containing merged cells, verify correct table structure in output
 
