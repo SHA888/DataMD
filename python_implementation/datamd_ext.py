@@ -1116,9 +1116,166 @@ class DataMDPreprocessor(Preprocessor):
                                     plt.xlabel(options["xlabel"])
                                 if "ylabel" in options:
                                     plt.ylabel(options["ylabel"])
-                                if "color" in options:
-                                    # This would need to be applied per chart type
-                                    pass
+
+                                # Generate chart with enhanced customization
+                                figsize = (10, 6)
+                                if "width" in options and "height" in options:
+                                    figsize = (options["width"], options["height"])
+                                elif "width" in options:
+                                    figsize = (options["width"], figsize[1])
+                                elif "height" in options:
+                                    figsize = (figsize[0], options["height"])
+
+                                plt.figure(figsize=figsize)
+
+                                # Handle color parameter
+                                color = options.get("color", None)
+
+                                # Handle other styling options
+                                alpha = options.get("alpha", 1.0)  # Transparency
+                                linestyle = options.get(
+                                    "linestyle", "-"
+                                )  # Line style for line charts
+                                marker = options.get(
+                                    "marker", None
+                                )  # Marker for line charts
+
+                                if chart_type == "bar":
+                                    if x_column and y_column:
+                                        df.plot(
+                                            x=x_column,
+                                            y=y_column,
+                                            kind="bar",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                        )
+                                    elif y_column:
+                                        df[y_column].plot(
+                                            kind="bar",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                        )
+                                    else:
+                                        df.plot(
+                                            kind="bar",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                        )
+                                elif chart_type == "line":
+                                    if x_column and y_column:
+                                        df.plot(
+                                            x=x_column,
+                                            y=y_column,
+                                            kind="line",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                            linestyle=linestyle,
+                                            marker=marker,
+                                        )
+                                    elif y_column:
+                                        df[y_column].plot(
+                                            kind="line",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                            linestyle=linestyle,
+                                            marker=marker,
+                                        )
+                                    else:
+                                        df.plot(
+                                            kind="line",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                            linestyle=linestyle,
+                                            marker=marker,
+                                        )
+                                elif chart_type == "pie":
+                                    if y_column:
+                                        if x_column:
+                                            df.plot(
+                                                x=x_column,
+                                                y=y_column,
+                                                kind="pie",
+                                                ax=plt.gca(),
+                                                ylabel="",
+                                                color=color,
+                                            )
+                                        else:
+                                            df[y_column].plot(
+                                                kind="pie",
+                                                ax=plt.gca(),
+                                                ylabel="",
+                                                color=color,
+                                            )
+                                    else:
+                                        error_msg = (
+                                            "Error: Pie charts require a Y column"
+                                        )
+                                        new_lines.append(error_msg)
+                                        plt.close()
+                                        continue
+                                elif chart_type == "scatter":
+                                    if x_column and y_column:
+                                        # Handle scatter plot specific options
+                                        s = options.get("size", 20)  # Marker size
+                                        df.plot(
+                                            x=x_column,
+                                            y=y_column,
+                                            kind="scatter",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                            s=s,
+                                        )
+                                    else:
+                                        error_msg = (
+                                            "Error: Scatter plots require both X "
+                                            "and Y columns"
+                                        )
+                                        new_lines.append(error_msg)
+                                        plt.close()
+                                        continue
+                                elif chart_type == "histogram":
+                                    # Handle histogram specific options
+                                    bins = options.get("bins", 10)  # Number of bins
+                                    if y_column:
+                                        df[y_column].plot(
+                                            kind="hist",
+                                            ax=plt.gca(),
+                                            color=color,
+                                            alpha=alpha,
+                                            bins=bins,
+                                        )
+                                    else:
+                                        # Use first numeric column
+                                        numeric_cols = df.select_dtypes(
+                                            include=["number"]
+                                        ).columns
+                                        if len(numeric_cols) > 0:
+                                            df[numeric_cols[0]].plot(
+                                                kind="hist",
+                                                ax=plt.gca(),
+                                                color=color,
+                                                alpha=alpha,
+                                                bins=bins,
+                                            )
+                                        else:
+                                            error_msg = (
+                                                "Error: No numeric columns found "
+                                                "for histogram"
+                                            )
+                                            new_lines.append(error_msg)
+                                            plt.close()
+                                            continue
+
+                                # Apply grid if requested
+                                if options.get("grid", False):
+                                    plt.grid(True)
 
                                 # Save chart
                                 plt.tight_layout()

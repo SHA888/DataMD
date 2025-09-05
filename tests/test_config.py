@@ -28,7 +28,7 @@ def test_configuration_defaults():
     # Test limit settings
     assert config.get_max_file_size_mb() == 100
     assert config.get_max_pdf_pages() == 50
-    assert config.get_supported_languages() == ["eng", "spa", "fra", "deu"]
+    assert config.get_supported_languages() == ["eng", "spa", "fra", "deu", "ind"]
 
     # Test processing settings
     assert config.get_default_csv_separator() == ","

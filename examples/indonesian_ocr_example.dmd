@@ -1,0 +1,17 @@
+---
+title: "Indonesian OCR Example"
+engine: jupyter
+format: html
+---
+
+# Indonesian OCR Example
+
+This example demonstrates the new Indonesian (Bahasa Indonesia) language support for OCR in DataMD.
+
+## OCR with Indonesian Language
+{{ image_ocr "scans/indonesian_document.jpg" "ind" }}
+
+## Comparison with Default English OCR
+{{ image_ocr "scans/indonesian_document.jpg" }}
+
+Note: For this feature to work properly, you need to have the Indonesian language pack installed in Tesseract OCR.

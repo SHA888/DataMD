@@ -27,7 +27,7 @@ class Configuration:
         "limits": {
             "max_file_size_mb": 100,
             "max_pages_pdf": 50,
-            "supported_languages": ["eng", "spa", "fra", "deu"],
+            "supported_languages": ["eng", "spa", "fra", "deu", "ind"],
         },
         "processing": {
             "default_csv_separator": ",",

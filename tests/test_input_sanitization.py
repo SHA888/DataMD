@@ -89,6 +89,9 @@ def test_sanitize_language_code():
     assert sanitize_language_code("") == "eng"
     assert sanitize_language_code(None) == "eng"
 
+    # Test Indonesian language code
+    assert sanitize_language_code("ind") == "ind"
+
 
 def test_sanitize_sheet_name():
     """Test sheet name sanitization"""
