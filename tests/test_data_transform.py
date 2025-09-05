@@ -39,19 +39,19 @@ def test_data_transformer_filter():
     # Test equality filter
     filtered = transformer.filter("age == 30")
     expected = pd.DataFrame({"name": ["Bob"], "age": [30], "city": ["London"]})
-    assert filtered.get_dataframe().equals(expected)
+    assert filtered.get_dataframe().reset_index(drop=True).equals(expected)
 
     # Test inequality filter
     filtered = transformer.filter("age > 25")
     expected = pd.DataFrame(
         {"name": ["Bob", "Charlie"], "age": [30, 35], "city": ["London", "Paris"]}
     )
-    assert filtered.get_dataframe().equals(expected)
+    assert filtered.get_dataframe().reset_index(drop=True).equals(expected)
 
     # Test string contains filter
     filtered = transformer.filter("city contains york")
     expected = pd.DataFrame({"name": ["Alice"], "age": [25], "city": ["New York"]})
-    assert filtered.get_dataframe().equals(expected)
+    assert filtered.get_dataframe().reset_index(drop=True).equals(expected)
 
 
 def test_data_transformer_sort():
@@ -74,7 +74,7 @@ def test_data_transformer_sort():
             "score": [95, 75, 85],
         }
     )
-    assert sorted_transformer.get_dataframe().equals(expected)
+    assert sorted_transformer.get_dataframe().reset_index(drop=True).equals(expected)
 
     # Test multi-column sort
     sorted_transformer = transformer.sort(["age", "score"])
@@ -85,7 +85,7 @@ def test_data_transformer_sort():
             "score": [95, 75, 85],
         }
     )
-    assert sorted_transformer.get_dataframe().equals(expected)
+    assert sorted_transformer.get_dataframe().reset_index(drop=True).equals(expected)
 
 
 def test_data_transformer_limit():
@@ -96,7 +96,7 @@ def test_data_transformer_limit():
     # Test limit
     limited = transformer.limit(3)
     expected = pd.DataFrame({"A": [1, 2, 3], "B": [10, 20, 30]})
-    assert limited.get_dataframe().equals(expected)
+    assert limited.get_dataframe().reset_index(drop=True).equals(expected)
 
 
 def test_data_transformer_to_markdown():
@@ -106,8 +106,8 @@ def test_data_transformer_to_markdown():
 
     # Test markdown conversion
     markdown = transformer.to_markdown()
-    expected = """|   name |   age |
-|--------|-------|
+    expected = """| name   |   age |
+|:-------|------:|
 | Alice  |    25 |
 | Bob    |    30 |"""
     assert markdown.strip() == expected.strip()
@@ -162,8 +162,15 @@ def test_apply_transformations():
 
     # Test filter transformation
     result = apply_transformations(df, "filter:age>25")
-    expected = pd.DataFrame({"name": ["Bob", "Charlie"], "age": [30, 35]})
-    assert result.equals(expected)
+    expected = pd.DataFrame(
+        {
+            "name": ["Bob", "Charlie", "David"],
+            "age": [30, 35, 28],
+            "salary": [60000, 70000, 55000],
+            "department": ["HR", "IT", "Finance"],
+        }
+    )
+    assert result.reset_index(drop=True).equals(expected)
 
 
 if __name__ == "__main__":

@@ -36,8 +36,9 @@ class DataTransformer:
 
         # Parse condition: column operator value
         # Support simple conditions like "age > 25" or "name contains John"
+        # Also support "age>25" without spaces
         pattern = (
-            r"^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*(==|!=|<|>|<=|>=|contains)\s+(.+?)\s*$"
+            r"^\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*(==|!=|<|>|<=|>=|contains)\s*(.+?)\s*$"
         )
         match = re.match(pattern, condition)
         if not match:
