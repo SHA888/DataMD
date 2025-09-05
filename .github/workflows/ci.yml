@@ -24,7 +24,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa tesseract-ocr-fra
+        sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-ind
 
     - name: Install Python dependencies
       run: |
@@ -39,12 +39,13 @@ jobs:
 
     - name: Test Python implementation
       run: |
+        cp examples/simple_example.dmd simple_example.dmd
         datamd simple_example.dmd
         test -f simple_example.html
 
     - name: Test Quarto rendering
       run: |
-        cp simple_example.dmd simple_example.qmd
+        cp examples/simple_example.dmd simple_example.qmd
         quarto render simple_example.qmd --to html
         test -f simple_example.html
 
