@@ -230,7 +230,7 @@ def watch_path(target_path, output_format="html", style_options=None, verbose=Fa
     observer.join()
 
 
-def main():
+def main(args=None):
     parser = argparse.ArgumentParser(
         description="Process Data Markdown (DataMD) (.dmd) files"
     )
@@ -265,52 +265,68 @@ def main():
         "-v", "--verbose", action="store_true", help="Enable verbose output"
     )
 
-    args = parser.parse_args()
+    parsed_args = parser.parse_args(args)
 
     # Load configuration if specified
-    if args.config:
-        get_config(args.config)
+    if parsed_args.config:
+        get_config(parsed_args.config)
 
     # Prepare style options
     style_options = {}
-    if args.style_body:
-        style_options["body"] = args.style_body
-    if args.style_table:
-        style_options["table"] = args.style_table
-    if args.style_cell:
-        style_options["cell"] = args.style_cell
-    if args.style_header:
-        style_options["header"] = args.style_header
-    if args.style_pre:
-        style_options["pre"] = args.style_pre
-    if args.style_video:
-        style_options["video"] = args.style_video
-    if args.style_img:
-        style_options["img"] = args.style_img
+    if parsed_args.style_body:
+        style_options["body"] = parsed_args.style_body
+    if parsed_args.style_table:
+        style_options["table"] = parsed_args.style_table
+    if parsed_args.style_cell:
+        style_options["cell"] = parsed_args.style_cell
+    if parsed_args.style_header:
+        style_options["header"] = parsed_args.style_header
+    if parsed_args.style_pre:
+        style_options["pre"] = parsed_args.style_pre
+    if parsed_args.style_video:
+        style_options["video"] = parsed_args.style_video
+    if parsed_args.style_img:
+        style_options["img"] = parsed_args.style_img
 
-    is_file = os.path.isfile(args.input)
-    is_dir = os.path.isdir(args.input)
+    is_file = os.path.isfile(parsed_args.input)
+    is_dir = os.path.isdir(parsed_args.input)
 
-    if args.verbose:
-        print(f"DataMD Processor started with format: {args.format}")
+    if parsed_args.verbose:
+        print(f"DataMD Processor started with format: {parsed_args.format}")
         if style_options:
             print(f"Custom styles applied: {list(style_options.keys())}")
 
     if is_file:
-        if not args.input.endswith(".dmd"):
+        if not parsed_args.input.endswith(".dmd"):
             print("Error: Input file must have .dmd extension")
             sys.exit(1)
         process_dmd_file(
-            args.input, args.output, args.format, style_options, args.verbose
+            parsed_args.input,
+            parsed_args.output,
+            parsed_args.format,
+            style_options,
+            parsed_args.verbose,
         )
-        if args.watch:
-            watch_path(args.input, args.format, style_options, args.verbose)
+        if parsed_args.watch:
+            watch_path(
+                parsed_args.input,
+                parsed_args.format,
+                style_options,
+                parsed_args.verbose,
+            )
     elif is_dir:
-        process_directory(args.input, args.format, style_options, args.verbose)
-        if args.watch:
-            watch_path(args.input, args.format, style_options, args.verbose)
+        process_directory(
+            parsed_args.input, parsed_args.format, style_options, parsed_args.verbose
+        )
+        if parsed_args.watch:
+            watch_path(
+                parsed_args.input,
+                parsed_args.format,
+                style_options,
+                parsed_args.verbose,
+            )
     else:
-        print(f"Error: {args.input} is not a valid file or directory")
+        print(f"Error: {parsed_args.input} is not a valid file or directory")
         sys.exit(1)
 
 

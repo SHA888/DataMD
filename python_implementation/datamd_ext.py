@@ -131,7 +131,7 @@ def sanitize_numeric_input(value, min_val=None, max_val=None, default=None):
             num_value = max_val
 
         # Return as int if it's a whole number
-        if num_value.is_integer():
+        if isinstance(num_value, float) and num_value.is_integer():
             return int(num_value)
         return num_value
     except (ValueError, TypeError):
