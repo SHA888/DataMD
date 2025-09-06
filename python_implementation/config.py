@@ -36,6 +36,11 @@ class Configuration:
             "video_thumb_width": 320,
             "video_thumb_height": 240,
         },
+        "performance": {
+            "chunk_size": 10000,
+            "max_memory_mb": 100,
+            "streaming_threshold_mb": 10,
+        },
         "security": {
             "allow_directory_traversal": False,
             "max_filename_length": 255,
@@ -269,6 +274,18 @@ class Configuration:
         width = self.get("processing.video_thumb_width", 320)
         height = self.get("processing.video_thumb_height", 240)
         return (width, height)
+
+    def get_chunk_size(self) -> int:
+        """Get default chunk size for streaming processing."""
+        return self.get("performance.chunk_size", 10000)
+
+    def get_max_memory_mb(self) -> int:
+        """Get maximum memory usage for processing in MB."""
+        return self.get("performance.max_memory_mb", 100)
+
+    def get_streaming_threshold_mb(self) -> int:
+        """Get file size threshold for switching to streaming mode in MB."""
+        return self.get("performance.streaming_threshold_mb", 10)
 
     def is_directory_traversal_allowed(self) -> bool:
         """Check if directory traversal is allowed (security setting)."""

@@ -341,6 +341,57 @@ def read_excel_chunked(file_path, sheet_name=0, chunk_size=10000, engine="openpy
         yield df.iloc[i : i + chunk_size]
 
 
+def process_csv_streaming(file_path, sep=",", transform="", chunk_size=10000):
+    """
+    Process CSV files in streaming fashion with chunked reading.
+
+    Args:
+        file_path (str): Path to CSV file
+        sep (str): CSV separator
+        transform (str): Transformation string
+        chunk_size (int): Number of rows per chunk
+
+    Yields:
+        str: Processed chunk as markdown
+    """
+    try:
+        for chunk in read_csv_chunked(file_path, chunk_size=chunk_size, sep=sep):
+            # Apply transformations if specified
+            if transform:
+                chunk = apply_transformations(chunk, transform)
+            yield chunk.to_markdown(index=False)
+    except Exception as e:
+        raise Exception(f"Error processing CSV file in streaming mode: {str(e)}")
+
+
+def process_excel_streaming(
+    file_path, sheet_name=0, transform="", chunk_size=10000, engine="openpyxl"
+):
+    """
+    Process Excel files in streaming fashion.
+
+    Args:
+        file_path (str): Path to Excel file
+        sheet_name (str or int): Sheet name or index
+        transform (str): Transformation string
+        chunk_size (int): Number of rows per chunk
+        engine (str): Excel engine to use
+
+    Yields:
+        str: Processed chunk as markdown
+    """
+    try:
+        for chunk in read_excel_chunked(
+            file_path, sheet_name=sheet_name, chunk_size=chunk_size, engine=engine
+        ):
+            # Apply transformations if specified
+            if transform:
+                chunk = apply_transformations(chunk, transform)
+            yield chunk.to_markdown(index=False)
+    except Exception as e:
+        raise Exception(f"Error processing Excel file in streaming mode: {str(e)}")
+
+
 def process_large_csv(file_path, sep=",", transform="", max_memory_mb=100):
     """
     Process large CSV files with memory optimization.
@@ -464,6 +515,7 @@ class DataMDPreprocessor(Preprocessor):
                         # Check file size for large file handling
                         file_size_mb = secure_path.stat().st_size / (1024 * 1024)
                         max_file_size_mb = config.get_max_file_size_mb()
+                        streaming_threshold_mb = config.get_streaming_threshold_mb()
 
                         # Try to get from cache first
                         cache_key = f"csv:{secure_path}:{sep}:{transform}"
@@ -480,8 +532,29 @@ class DataMDPreprocessor(Preprocessor):
                                     transform=transform,
                                     max_memory_mb=max_file_size_mb,
                                 )
+                            elif file_size_mb > streaming_threshold_mb:
+                                # Use streaming processing for medium-sized files
+                                chunk_size = config.get_chunk_size()
+                                streaming_result = []
+                                for chunk_md in process_csv_streaming(
+                                    str(secure_path),
+                                    sep=sep,
+                                    transform=transform,
+                                    chunk_size=chunk_size,
+                                ):
+                                    streaming_result.append(chunk_md)
+                                    streaming_result.append(
+                                        "\n---\n"
+                                    )  # Separator between chunks
+
+                                if streaming_result:
+                                    # Remove the last separator
+                                    streaming_result.pop()
+                                    df = "\n".join(streaming_result)
+                                else:
+                                    df = "Empty CSV file"
                             else:
-                                # Normal processing
+                                # Normal processing for small files
                                 df = pd.read_csv(secure_path, sep=sep)
                                 # Apply transformations if specified
                                 if transform:
@@ -606,6 +679,7 @@ class DataMDPreprocessor(Preprocessor):
                         # Check file size for large file handling
                         file_size_mb = secure_path.stat().st_size / (1024 * 1024)
                         max_file_size_mb = config.get_max_file_size_mb()
+                        streaming_threshold_mb = config.get_streaming_threshold_mb()
 
                         # Try to get from cache first
                         cache_key = f"excel:{secure_path}:{sheet}:{engine}:{transform}"
@@ -626,8 +700,30 @@ class DataMDPreprocessor(Preprocessor):
                                     engine=engine,
                                     max_memory_mb=max_file_size_mb,
                                 )
+                            elif file_size_mb > streaming_threshold_mb:
+                                # Use streaming processing for medium-sized files
+                                chunk_size = config.get_chunk_size()
+                                streaming_result = []
+                                for chunk_md in process_excel_streaming(
+                                    str(secure_path),
+                                    sheet_name=sheet,
+                                    transform=transform,
+                                    chunk_size=chunk_size,
+                                    engine=engine,
+                                ):
+                                    streaming_result.append(chunk_md)
+                                    streaming_result.append(
+                                        "\n---\n"
+                                    )  # Separator between chunks
+
+                                if streaming_result:
+                                    # Remove the last separator
+                                    streaming_result.pop()
+                                    df = "\n".join(streaming_result)
+                                else:
+                                    df = "Empty Excel file"
                             else:
-                                # Normal processing
+                                # Normal processing for small files
                                 df = pd.read_excel(
                                     secure_path, sheet_name=sheet, engine=engine
                                 )

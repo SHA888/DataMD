@@ -33,6 +33,8 @@ def process_dmd_file(
     output_format="html",
     style_options=None,
     verbose=False,
+    chunk_size=None,
+    max_memory_mb=None,
 ):
     """Process a single .dmd file and convert to specified format"""
 
@@ -142,7 +144,12 @@ def process_dmd_file(
 
 
 def process_directory(
-    directory, output_format="html", style_options=None, verbose=False
+    directory,
+    output_format="html",
+    style_options=None,
+    verbose=False,
+    chunk_size=None,
+    max_memory_mb=None,
 ):
     """Process all .dmd files in a directory"""
     directory = Path(directory)
@@ -162,10 +169,19 @@ def process_directory(
             output_format=output_format,
             style_options=style_options,
             verbose=verbose,
+            chunk_size=chunk_size,
+            max_memory_mb=max_memory_mb,
         )
 
 
-def watch_path(target_path, output_format="html", style_options=None, verbose=False):
+def watch_path(
+    target_path,
+    output_format="html",
+    style_options=None,
+    verbose=False,
+    chunk_size=None,
+    max_memory_mb=None,
+):
     """Watch a file or directory for changes and reprocess .dmd files."""
     try:
         from watchdog.events import FileSystemEventHandler
@@ -214,6 +230,8 @@ def watch_path(target_path, output_format="html", style_options=None, verbose=Fa
                         output_format=output_format,
                         style_options=style_options,
                         verbose=verbose,
+                        chunk_size=chunk_size,
+                        max_memory_mb=max_memory_mb,
                     )
 
     print(f"Watching: {target.resolve()} (press Ctrl+C to stop)")
@@ -264,12 +282,28 @@ def main(args=None):
     parser.add_argument(
         "-v", "--verbose", action="store_true", help="Enable verbose output"
     )
+    parser.add_argument(
+        "--chunk-size",
+        type=int,
+        help="Set chunk size for streaming processing (default: 10000)",
+    )
+    parser.add_argument(
+        "--max-memory",
+        type=int,
+        help="Set maximum memory usage in MB (default: 100)",
+    )
 
     parsed_args = parser.parse_args(args)
 
     # Load configuration if specified
     if parsed_args.config:
         get_config(parsed_args.config)
+
+    # Update configuration with CLI options if provided
+    if parsed_args.chunk_size:
+        get_config().set("performance.chunk_size", parsed_args.chunk_size)
+    if parsed_args.max_memory:
+        get_config().set("performance.max_memory_mb", parsed_args.max_memory)
 
     # Prepare style options
     style_options = {}
@@ -306,6 +340,8 @@ def main(args=None):
             parsed_args.format,
             style_options,
             parsed_args.verbose,
+            parsed_args.chunk_size,
+            parsed_args.max_memory,
         )
         if parsed_args.watch:
             watch_path(
@@ -313,10 +349,17 @@ def main(args=None):
                 parsed_args.format,
                 style_options,
                 parsed_args.verbose,
+                parsed_args.chunk_size,
+                parsed_args.max_memory,
             )
     elif is_dir:
         process_directory(
-            parsed_args.input, parsed_args.format, style_options, parsed_args.verbose
+            parsed_args.input,
+            parsed_args.format,
+            style_options,
+            parsed_args.verbose,
+            parsed_args.chunk_size,
+            parsed_args.max_memory,
         )
         if parsed_args.watch:
             watch_path(
@@ -324,6 +367,8 @@ def main(args=None):
                 parsed_args.format,
                 style_options,
                 parsed_args.verbose,
+                parsed_args.chunk_size,
+                parsed_args.max_memory,
             )
     else:
         print(f"Error: {parsed_args.input} is not a valid file or directory")

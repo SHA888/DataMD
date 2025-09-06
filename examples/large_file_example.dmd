@@ -1,0 +1,11 @@
+# Large File Processing Example
+
+This example demonstrates how DataMD handles large files using streaming processing.
+
+## Large CSV File
+
+{{ csv "large_sample.csv" }}
+
+## Large CSV with Transformation
+
+{{ csv "large_sample.csv" |filter:category==category2|sort:id }}

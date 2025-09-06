@@ -114,19 +114,19 @@ rm -rf /path/to/custom/cache/directory
 ## Supported Commands
 
 ### CSV Files
-```markdown
+````
 {{ csv "data/file.csv" }}
 {{ csv "data/file.csv" ";" }}  # Custom separator
 ```
 
 ### JSON Files
-```markdown
+```
 {{ json "config/data.json" }}
 {{ json "config/data.json" true }}  # Flatten to table
 ```
 
 ### Excel Files
-```markdown
+```
 {{ xlsx "report.xlsx" }}
 {{ xlsx "report.xlsx" "Sheet1" }}    # Specific sheet by name
 {{ xlsx "report.xlsx" 0 }}           # Specific sheet by index
@@ -136,7 +136,7 @@ rm -rf /path/to/custom/cache/directory
 ```
 
 ### PDF Files
-```markdown
+```
 {{ pdf "document.pdf" }}             # All pages
 {{ pdf "document.pdf" 1 }}           # Specific page
 {{ pdf_table "report.pdf" 2 }}       # Extract tables from page 2
@@ -145,7 +145,7 @@ rm -rf /path/to/custom/cache/directory
 ```
 
 ### Images (OCR)
-```markdown
+```
 {{ image_ocr "scan.jpg" }}           # English (default)
 {{ image_ocr "scan.jpg" "spa" }}     # Spanish
 {{ image_ocr "scan.jpg" "fra" }}     # French
@@ -153,7 +153,7 @@ rm -rf /path/to/custom/cache/directory
 ```
 
 ### Videos
-```markdown
+```
 {{ video "clip.mp4" }}                           # Default size
 {{ video "clip.mp4" 800 600 }}                  # Custom dimensions
 {{ video "clip.mp4" 800 600 true false }}       # With controls, no autoplay
@@ -162,7 +162,7 @@ rm -rf /path/to/custom/cache/directory
 ```
 
 ### Charts
-```markdown
+```
 {{ chart "data/sales.csv" bar month sales title="Monthly Sales" }}
 {{ chart "data/profit.xlsx" line month profit xlabel="Month" ylabel="Profit ($)" }}
 {{ chart "data/market.json" pie category value title="Market Share" }}
@@ -197,7 +197,7 @@ Table detection sensitivity can be controlled with the following optional parame
 - `intersect=N` - Controls how close edges must be to be considered intersecting (default: 2)
 
 Example:
-```markdown
+```
 {{ pdf_table "report.pdf" 1 lines text snap=5 edge=10 intersect=3 }}
 ```
 
@@ -234,7 +234,7 @@ The `chart` shortcode takes the following parameters:
 - `bins=N` - Number of bins for histograms
 
 Example:
-```markdown
+```
 {{ chart "data/sales.csv" bar month sales title="Monthly Sales" xlabel="Month" ylabel="Sales ($)" color=blue width=10 height=6 }}
 {{ chart "data/trend.xlsx" line date value title="Trend Analysis" xlabel="Date" ylabel="Value" color=red linestyle="--" marker="o" }}
 {{ chart "data/distribution.json" histogram value title="Value Distribution" xlabel="Value" ylabel="Frequency" color=green bins=20 alpha=0.7 }}
@@ -282,7 +282,7 @@ Filter data based on column values:
 - `filter:column contains text` - Contains text (case-insensitive)
 
 Examples:
-```markdown
+```
 {{ csv "data/sales.csv" "," "filter:amount>1000" }}
 {{ xlsx "data/employees.xlsx" 0 "filter:department contains engineering|sort:salary|limit:5" }}
 ```
@@ -295,7 +295,7 @@ Sort data by one or more columns:
 - `sort:-column` - Sort by column (descending)
 
 Examples:
-```markdown
+```
 {{ csv "data/sales.csv" "," "sort:amount" }}
 {{ csv "data/sales.csv" "," "sort:-date|sort:amount" }}
 ```
@@ -307,7 +307,7 @@ Limit the number of rows returned:
 - `limit:n` - Return only the first n rows
 
 Example:
-```markdown
+```
 {{ csv "data/large_file.csv" "," "limit:100" }}
 ```
 
@@ -315,7 +315,7 @@ Example:
 
 Multiple operations can be combined using the pipe (|) character:
 
-```markdown
+```
 {{ csv "data/sales.csv" "," "filter:amount>1000|sort:-amount|limit:10" }}
 ```
 
@@ -344,63 +344,83 @@ The DataMD processor supports the following command-line options:
 ### Debugging Options
 - `-v, --verbose` - Enable verbose output
 
+### Performance Options
+- `--chunk-size N` - Set chunk size for streaming processing (default: 10000)
+- `--max-memory N` - Set maximum memory usage in MB (default: 100)
+
 ### Examples
 
 Process a single file:
-```bash
+```
 python process_dmd.py document.dmd
 ```
 
 Process a directory of files:
-```bash
+```
 python process_dmd.py /path/to/documents/
 ```
 
 Process with custom output location:
-```bash
+```
 python process_dmd.py document.dmd -o output.html
 ```
 
 Process with custom styling:
-```bash
+```
 python process_dmd.py document.dmd --style-body "font-family: Arial; max-width: 1000px;"
 ```
 
 Process with verbose output:
-```bash
+```
 python process_dmd.py document.dmd -v
 ```
 
 Watch for file changes:
-```bash
+```
 python process_dmd.py document.dmd --watch
 ```
 
 Use custom configuration:
-```bash
+```
 python process_dmd.py document.dmd --config config/app_config.json
 ```
 
-### Basic Options
-- `input` - Input .dmd file or directory (required)
-- `-o, --output` - Output HTML file (for single file processing)
-- `--watch` - Watch for file changes (requires watchdog)
-- `--config` - Path to configuration file
-
-### Output Format Options
-- `-f, --format` - Output format (currently only HTML is supported)
-- `--style-body` - Custom CSS for body element
-- `--style-table` - Custom CSS for table elements
-- `--style-cell` - Custom CSS for table cell elements
-- `--style-header` - Custom CSS for table header elements
-- `--style-pre` - Custom CSS for pre elements
-- `--style-video` - Custom CSS for video elements
-- `--style-img` - Custom CSS for img elements
-
-### Debugging Options
-- `-v, --verbose` - Enable verbose output
-
-Example:
-```bash
-python process_dmd.py report.dmd -v --style-body "font-family: Arial; max-width: 1000px;"
+Process with custom streaming parameters:
 ```
+python process_dmd.py large_document.dmd --chunk-size 5000 --max-memory 50
+```
+
+### Streaming Processing
+
+DataMD automatically uses streaming processing for large files to reduce memory usage. Files larger than the streaming threshold (default: 10MB) will be processed in chunks rather than loaded entirely into memory.
+
+The streaming threshold and chunk size can be configured in the configuration file or through CLI options:
+
+```json
+{
+  "performance": {
+    "chunk_size": 10000,
+    "max_memory_mb": 100,
+    "streaming_threshold_mb": 10
+  }
+}
+```
+
+When streaming processing is used, large files are processed in chunks and the output is separated by horizontal rules (---) to indicate chunk boundaries.
+
+Example output for a large CSV file:
+```
+| id | name  | value |
+|----|-------|-------|
+| 1  | Item1 | 100   |
+| 2  | Item2 | 200   |
+...
+---
+| id | name  | value |
+|----|-------|-------|
+| 10001 | Item10001 | 1000100 |
+| 10002 | Item10002 | 1000200 |
+...
+```
+
+This approach significantly reduces memory usage while processing large files, allowing DataMD to handle files of virtually any size within disk constraints.

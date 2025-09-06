@@ -1,0 +1,18 @@
+# Streaming Processing Example
+
+This example demonstrates how DataMD handles large files using streaming processing.
+
+## Large CSV File (10,000 rows)
+
+{{ csv "examples/very_large_sample.csv" }}
+
+## Filtered and Sorted Data
+
+{{ csv "examples/very_large_sample.csv" |filter:category==category2|sort:id|limit:10 }}
+
+## Custom Chunk Size
+
+You can also process files with custom chunk sizes using the CLI:
+```bash
+python process_dmd.py streaming_example.dmd --chunk-size 500 --max-memory 50
+```
