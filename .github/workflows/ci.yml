@@ -24,7 +24,7 @@ jobs:
     - name: Install system dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-ind
+        sudo apt-get install -y tesseract-ocr tesseract-ocr-eng tesseract-ocr-spa tesseract-ocr-fra tesseract-ocr-ind ffmpeg
 
     - name: Install Python dependencies
       run: |
@@ -33,6 +33,7 @@ jobs:
         pip install matplotlib  # Add matplotlib for chart functionality
         pip install jupyter
         pip install pytest pytest-cov
+        pip install psutil  # Add psutil for performance benchmarks
         pip install -e .
 
     - name: Install Quarto
@@ -50,9 +51,15 @@ jobs:
         quarto render simple_example.qmd --to html
         test -f simple_example.html
 
-    - name: Run tests
+    - name: Run comprehensive test suite
       run: |
-        pytest tests/ --cov=python_implementation --cov-report=xml
+        # Run all tests including new comprehensive tests
+        pytest tests/ --cov=python_implementation --cov-report=xml -v
+
+    - name: Run performance benchmarks
+      run: |
+        # Run performance benchmarks to ensure no regressions
+        python tests/test_performance_benchmarks.py
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3

@@ -96,9 +96,21 @@ python python_implementation/process_dmd.py . --watch
 python python_implementation/process_dmd.py report.dmd -v --style-body "font-family: Arial; max-width: 1000px;"
 ```
 
+## Advanced Usage
+
+For advanced features and complex use cases, see the [Advanced Usage Guide](docs/ADVANCED_USAGE.md).
+
+## API Documentation
+
+For developers looking to extend or integrate with DataMD, see the [API Documentation](docs/API_DOCUMENTATION.md).
+
+## Extending DataMD
+
+To add support for new file formats or create custom shortcode handlers, see the [Extending Shortcodes Guide](docs/EXTENDING_SHORTCODES.md).
+
 ## Syntax
 
-See [SYNTAX.md](SYNTAX.md) for detailed syntax reference.
+See [SYNTAX.md](docs/SYNTAX.md) for detailed syntax reference.
 
 ## Examples
 
