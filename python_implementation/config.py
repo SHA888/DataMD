@@ -108,8 +108,35 @@ class Configuration:
                 # Add new section
                 self._config[section] = section_config
 
+    @staticmethod
+    def _parse_bool(value: str) -> bool:
+        """Parse a string into a boolean.
+
+        Accepts ``true``, ``1``, ``yes`` (case‑insensitive) as ``True`` and
+        ``false``, ``0``, ``no`` as ``False``.  Any other value defaults to
+        ``False`` to avoid unexpected truthy values.
+        """
+        return value.lower() in {"true", "1", "yes"}
+
+    @staticmethod
+    def _parse_int(value: str) -> int | None:
+        """Parse a string into an integer.
+
+        Returns ``None`` if the value cannot be parsed as an integer so the
+        caller can decide to keep the default.
+        """
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
+
     def _load_from_environment(self):
-        """Load configuration from environment variables."""
+        """Load configuration from environment variables.
+
+        Environment variables override the defaults defined in
+        :pyattr:`DEFAULTS`.  Values are parsed into the appropriate type
+        (boolean or integer) before assignment to ensure consistency.
+        """
         # Application settings
         env_app_name = os.environ.get("DATAMD_APP_NAME")
         if env_app_name:
@@ -126,36 +153,32 @@ class Configuration:
         # Feature settings
         env_ocr_enabled = os.environ.get("DATAMD_OCR_ENABLED")
         if env_ocr_enabled is not None:
-            self._config["features"]["ocr_enabled"] = env_ocr_enabled.lower() in (
-                "true",
-                "1",
-                "yes",
-            )
+            self._config["features"]["ocr_enabled"] = self._parse_bool(env_ocr_enabled)
 
         env_pdf_processing = os.environ.get("DATAMD_PDF_PROCESSING")
         if env_pdf_processing is not None:
-            self._config["features"]["pdf_processing"] = env_pdf_processing.lower() in (
-                "true",
-                "1",
-                "yes",
+            self._config["features"]["pdf_processing"] = self._parse_bool(
+                env_pdf_processing
             )
 
         env_video_support = os.environ.get("DATAMD_VIDEO_SUPPORT")
         if env_video_support is not None:
-            self._config["features"]["video_support"] = env_video_support.lower() in (
-                "true",
-                "1",
-                "yes",
+            self._config["features"]["video_support"] = self._parse_bool(
+                env_video_support
             )
 
         # Limit settings
         env_max_file_size = os.environ.get("DATAMD_MAX_FILE_SIZE_MB")
-        if env_max_file_size and env_max_file_size.isdigit():
-            self._config["limits"]["max_file_size_mb"] = int(env_max_file_size)
+        if env_max_file_size:
+            parsed = self._parse_int(env_max_file_size)
+            if parsed is not None:
+                self._config["limits"]["max_file_size_mb"] = parsed
 
         env_max_pages_pdf = os.environ.get("DATAMD_MAX_PAGES_PDF")
-        if env_max_pages_pdf and env_max_pages_pdf.isdigit():
-            self._config["limits"]["max_pages_pdf"] = int(env_max_pages_pdf)
+        if env_max_pages_pdf:
+            parsed = self._parse_int(env_max_pages_pdf)
+            if parsed is not None:
+                self._config["limits"]["max_pages_pdf"] = parsed
 
         # Processing settings
         env_default_csv_sep = os.environ.get("DATAMD_DEFAULT_CSV_SEPARATOR")
@@ -175,9 +198,9 @@ class Configuration:
         # Security settings
         env_allow_traversal = os.environ.get("DATAMD_ALLOW_DIRECTORY_TRAVERSAL")
         if env_allow_traversal is not None:
-            self._config["security"][
-                "allow_directory_traversal"
-            ] = env_allow_traversal.lower() in ("true", "1", "yes")
+            self._config["security"]["allow_directory_traversal"] = self._parse_bool(
+                env_allow_traversal
+            )
 
     def get(self, key_path: str, default: Any = None) -> Any:
         """

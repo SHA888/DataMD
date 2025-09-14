@@ -1,7 +1,7 @@
 # TODO
 
 ## Configuration
-- [ ] Normalize environment variable parsing (boolean, int) and document defaults.
+- [x] Normalize environment variable parsing (boolean, int) and document defaults.
 - [ ] Add CLI option to override config file path.
 
 ## Error handling

@@ -295,6 +295,12 @@ def main(args=None):
 
     parsed_args = parser.parse_args(args)
 
+    # Allow environment variable override for config file path
+    if not parsed_args.config:
+        env_config = os.getenv("DATAMD_CONFIG_FILE")
+        if env_config:
+            parsed_args.config = env_config
+
     # Load configuration if specified
     if parsed_args.config:
         get_config(parsed_args.config)
