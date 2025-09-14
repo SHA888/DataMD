@@ -7,12 +7,12 @@ import pandas as pd
 from python_implementation.datamd_ext import DataMDPreprocessor
 
 
-def process_pdf_table_shortcode(file_path, page, h_strategy="", v_strategy="", 
+def process_pdf_table_shortcode(file_path, page, h_strategy="", v_strategy="",
                                extra_params=""):
     """Process a pdf_table shortcode and return the result."""
     # Create a mock preprocessor
     preprocessor = DataMDPreprocessor(None)
-    
+
     # Create test line with the shortcode
     if h_strategy and v_strategy and extra_params:
         line = (f'{{{{ pdf_table "{file_path}" {page} {h_strategy} {v_strategy} '
@@ -21,7 +21,7 @@ def process_pdf_table_shortcode(file_path, page, h_strategy="", v_strategy="",
         line = f'{{{{ pdf_table "{file_path}" {page} {h_strategy} {v_strategy} }}}}'
     else:
         line = f'{{{{ pdf_table "{file_path}" {page} }}}}'
-    
+
     # Process the line
     result_lines = preprocessor.run([line])
     return "\n".join(result_lines) if result_lines else ""
