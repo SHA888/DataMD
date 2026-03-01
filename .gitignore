@@ -28,6 +28,7 @@ _site/
 # Editors/IDE
 .vscode/
 .idea/
+.windsurf/
 *.swp
 *.swo
 
