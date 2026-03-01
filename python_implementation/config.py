@@ -187,9 +187,9 @@ class Configuration:
 
         env_default_pdf_strategy = os.environ.get("DATAMD_DEFAULT_PDF_STRATEGY")
         if env_default_pdf_strategy:
-            self._config["processing"][
-                "default_pdf_strategy"
-            ] = env_default_pdf_strategy
+            self._config["processing"]["default_pdf_strategy"] = (
+                env_default_pdf_strategy
+            )
 
         env_default_ocr_lang = os.environ.get("DATAMD_DEFAULT_OCR_LANGUAGE")
         if env_default_ocr_lang:

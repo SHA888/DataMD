@@ -3,13 +3,19 @@
 Comprehensive tests for video thumbnail functionality
 """
 
+import tempfile
+from pathlib import Path
+
 import pytest
 
 # Try to import moviepy for testing
 try:
+    from python_implementation.datamd_ext import DataMDPreprocessor
+
     MOVIEPY_AVAILABLE = True
 except ImportError:
     MOVIEPY_AVAILABLE = False
+    DataMDPreprocessor = None  # type: ignore
 
 from python_implementation.datamd_ext import (
     sanitize_boolean_input,
@@ -130,9 +136,7 @@ def test_video_thumb_width_only():
 
 def test_video_thumb_missing_time():
     """Test the video_thumb shortcode with missing time parameter"""
-    with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
-
+    with tempfile.TemporaryDirectory():
         # Test the video_thumb shortcode processing
         preprocessor = DataMDPreprocessor(None)
 
@@ -153,10 +157,8 @@ def test_video_thumb_missing_time():
 def test_video_thumb_negative_time():
     """Test the video_thumb shortcode with negative time parameter"""
     with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
-
         # Create a dummy video file
-        video_file = tmp_path / "test_video.mp4"
+        video_file = Path(tmp_dir) / "test_video.mp4"
         video_file.write_text("dummy video content", encoding="utf-8")
 
         # Test the video_thumb shortcode processing
@@ -176,10 +178,8 @@ def test_video_thumb_negative_time():
 def test_video_thumb_large_dimensions():
     """Test the video_thumb shortcode with very large dimensions"""
     with tempfile.TemporaryDirectory() as tmp_dir:
-        tmp_path = Path(tmp_dir)
-
         # Create a dummy video file
-        video_file = tmp_path / "test_video.mp4"
+        video_file = Path(tmp_dir) / "test_video.mp4"
         video_file.write_text("dummy video content", encoding="utf-8")
 
         # Test the video_thumb shortcode processing

@@ -98,7 +98,7 @@ These tasks were completed in earlier development phases. Preserved here for ref
 ## P0 — Critical Path (Blocking Production Use)
 
 ### Error Handling & Logging
-- [ ] Replace all `print()` calls with structured logging (`logging` module) in `process_dmd_file`
+- [x] Replace all `print()` calls with structured logging (`logging` module) in `process_dmd_file`
 - [ ] Define custom exception hierarchy: `DataMDError`, `ShortcodeError`, `FileResolutionError`, `TransformError`
 - [ ] Ensure every shortcode handler propagates errors to the caller (no silent swallowing)
 - [ ] Add contextual error messages with file path, line number, and shortcode text

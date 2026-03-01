@@ -5,6 +5,7 @@ Processes .dmd files using the Python-Markdown extension
 """
 
 import argparse
+import logging
 import os
 import sys
 import time
@@ -14,6 +15,8 @@ from pathlib import Path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__)))
 
 import markdown
+
+logger = logging.getLogger(__name__)
 
 # Handle imports for both package and direct script execution
 try:
@@ -39,11 +42,11 @@ def process_dmd_file(
     """Process a single .dmd file and convert to specified format"""
 
     if not os.path.exists(input_file):
-        print(f"Error: File {input_file} not found")
+        logger.error("File not found", extra={"input_file": input_file})
         return False
 
     if verbose:
-        print(f"Processing {input_file}...")
+        logger.info("Processing file", extra={"input_file": input_file})
 
     # Read the .dmd file
     with open(input_file, "r", encoding="utf-8") as f:
@@ -139,7 +142,10 @@ def process_dmd_file(
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(output_content)
 
-    print(f"Processed {input_file} -> {output_file}")
+    logger.info(
+        "Processed file",
+        extra={"input_file": input_file, "output_file": str(output_file)},
+    )
     return True
 
 
@@ -156,14 +162,20 @@ def process_directory(
     dmd_files = list(directory.glob("*.dmd"))
 
     if not dmd_files:
-        print(f"No .dmd files found in {directory}")
+        logger.warning("No .dmd files found", extra={"directory": str(directory)})
         return
 
-    print(f"Processing {len(dmd_files)} .dmd files in {directory}...")
+    logger.info(
+        "Processing directory",
+        extra={"count": len(dmd_files), "directory": str(directory)},
+    )
 
     for dmd_file in dmd_files:
         if verbose:
-            print(f"  Processing {dmd_file.name}...")
+            logger.info(
+                "Processing file in directory",
+                extra={"file": dmd_file.name, "directory": str(directory)},
+            )
         process_dmd_file(
             str(dmd_file),
             output_format=output_format,
@@ -187,9 +199,9 @@ def watch_path(
         from watchdog.events import FileSystemEventHandler
         from watchdog.observers import Observer
     except Exception:
-        print(
-            "Error: --watch requires the 'watchdog' package. Install with: "
-            "pip install watchdog"
+        logger.error(
+            "--watch requires the 'watchdog' package. "
+            "Install with: pip install watchdog"
         )
         sys.exit(1)
 
@@ -224,7 +236,10 @@ def watch_path(
                 return
             if p.suffix == ".dmd":
                 if self._should_run(str(p)):
-                    print(f"Change detected: {p}. Rebuilding...")
+                    logger.info(
+                        "Change detected; rebuilding",
+                        extra={"path": str(p)},
+                    )
                     process_dmd_file(
                         str(p),
                         output_format=output_format,
@@ -234,7 +249,10 @@ def watch_path(
                         max_memory_mb=max_memory_mb,
                     )
 
-    print(f"Watching: {target.resolve()} (press Ctrl+C to stop)")
+    logger.info(
+        "Watching for changes",
+        extra={"target": str(target.resolve()), "recursive": target.is_dir()},
+    )
     event_handler = Handler()
     observer = Observer()
     observer.schedule(event_handler, str(watch_dir), recursive=target.is_dir())
@@ -243,7 +261,7 @@ def watch_path(
         while True:
             time.sleep(1)
     except KeyboardInterrupt:
-        print("Stopping watcher...")
+        logger.info("Stopping watcher")
         observer.stop()
     observer.join()
 
@@ -332,13 +350,18 @@ def main(args=None):
     is_dir = os.path.isdir(parsed_args.input)
 
     if parsed_args.verbose:
-        print(f"DataMD Processor started with format: {parsed_args.format}")
+        logger.info(
+            "DataMD Processor started",
+            extra={"format": parsed_args.format},
+        )
         if style_options:
-            print(f"Custom styles applied: {list(style_options.keys())}")
+            logger.info(
+                "Custom styles applied", extra={"styles": list(style_options.keys())}
+            )
 
     if is_file:
         if not parsed_args.input.endswith(".dmd"):
-            print("Error: Input file must have .dmd extension")
+            logger.error("Input file must have .dmd extension")
             sys.exit(1)
         process_dmd_file(
             parsed_args.input,
@@ -377,7 +400,10 @@ def main(args=None):
                 parsed_args.max_memory,
             )
     else:
-        print(f"Error: {parsed_args.input} is not a valid file or directory")
+        logger.error(
+            "Input path is not a valid file or directory",
+            extra={"input": parsed_args.input},
+        )
         sys.exit(1)
 
 

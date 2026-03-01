@@ -1,22 +1,23 @@
-import os
 import tempfile
 from pathlib import Path
 
-import pandas as pd
 
 from python_implementation.datamd_ext import DataMDPreprocessor
 
 
-def process_pdf_table_shortcode(file_path, page, h_strategy="", v_strategy="",
-                               extra_params=""):
+def process_pdf_table_shortcode(
+    file_path, page, h_strategy="", v_strategy="", extra_params=""
+):
     """Process a pdf_table shortcode and return the result."""
     # Create a mock preprocessor
     preprocessor = DataMDPreprocessor(None)
 
     # Create test line with the shortcode
     if h_strategy and v_strategy and extra_params:
-        line = (f'{{{{ pdf_table "{file_path}" {page} {h_strategy} {v_strategy} '
-                f'{extra_params} }}}}'))
+        line = (
+            f'{{{{ pdf_table "{file_path}" {page} {h_strategy} {v_strategy} '
+            f"{extra_params} }}}}"
+        )
     elif h_strategy and v_strategy:
         line = f'{{{{ pdf_table "{file_path}" {page} {h_strategy} {v_strategy} }}}}'
     else:
@@ -68,8 +69,7 @@ def test_pdf_table_shortcode_with_strategies():
 
         # Test pdf_table with strategies
         # Break long line into multiple lines
-        result = process_pdf_table_shortcode(
-            str(pdf_file), "1", "lines", "text")
+        result = process_pdf_table_shortcode(str(pdf_file), "1", "lines", "text")
 
         assert isinstance(result, str)
 
@@ -87,26 +87,30 @@ def test_pdf_table_shortcode_with_all_parameters():
         from reportlab.lib.pagesizes import letter
         from reportlab.platypus import SimpleDocTemplate, Table, TableStyle
 
-        doc = SimpleDocTemplate(str(pdf_file), pagesize=letter)
+        _doc = SimpleDocTemplate(str(pdf_file), pagesize=letter)
         # Break long line into multiple lines
         data = [
-            ['Name', 'Age', 'City'],
-            ['John Doe', '30', 'New York'],
-            ['Jane Smith', '25', 'Los Angeles'],
-            ['Bob Johnson', '35', 'Chicago']
+            ["Name", "Age", "City"],
+            ["John Doe", "30", "New York"],
+            ["Jane Smith", "25", "Los Angeles"],
+            ["Bob Johnson", "35", "Chicago"],
         ]
 
         table = Table(data)
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('FONTSIZE', (0, 0), (-1, 0), 14),
-            ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-            ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black)
-        ]))
+        table.setStyle(
+            TableStyle(
+                [
+                    ("BACKGROUND", (0, 0), (-1, 0), colors.grey),
+                    ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+                    ("ALIGN", (0, 0), (-1, -1), "CENTER"),
+                    ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+                    ("FONTSIZE", (0, 0), (-1, 0), 14),
+                    ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+                    ("BACKGROUND", (0, 1), (-1, -1), colors.beige),
+                    ("GRID", (0, 0), (-1, -1), 1, colors.black),
+                ]
+            )
+        )
 
         # For testing, we'll just create a simple file
         with open(pdf_file, "w") as f:
@@ -116,7 +120,8 @@ def test_pdf_table_shortcode_with_all_parameters():
         # Break long line into multiple lines
         params = "snap=3.5,edge=5.0,intersect=2.0"
         result = process_pdf_table_shortcode(
-            str(pdf_file), "1", "lines", "text", params)
+            str(pdf_file), "1", "lines", "text", params
+        )
 
         # Verify the result contains table markdown
         assert isinstance(result, str)
