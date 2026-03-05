@@ -1,6 +1,8 @@
 import re
 from typing import Any, Dict, List, Optional, Union
 
+from .exceptions import TransformError
+
 import pandas as pd
 
 
@@ -260,36 +262,41 @@ def apply_transformations(df: pd.DataFrame, transform_str: str) -> pd.DataFrame:
     Apply transformations to a DataFrame based on a transformation string.
 
     Args:
-        df (pd.DataFrame): DataFrame to transform
-        transform_str (str): Transformation string
+        df (pd.DataFrame): Input DataFrame
+        transform_str (str): Transformation string with operations separated by | characters
 
     Returns:
         pd.DataFrame: Transformed DataFrame
+
+    Raises:
+        TransformError: If parsing or applying transformations fails.
     """
+
     if not transform_str:
         return df
 
-    transformer = DataTransformer(df)
-    operations = parse_transform_string(transform_str)
+    try:
+        operations = parse_transform_string(transform_str)
+        transformer = DataTransformer(df)
 
-    for op in operations:
-        op_type = op["type"]
-        if op_type == "filter":
-            transformer = transformer.filter(op["condition"])
-        elif op_type == "sort":
-            columns = op.get("columns")
-            if columns:
-                transformer = transformer.sort(columns, op.get("ascending", True))
+        for op in operations:
+            op_type = op["type"]
+            if op_type == "filter":
+                transformer = transformer.filter(op["condition"])
+            elif op_type == "sort":
+                columns = op["columns"]
+                if columns is None:
+                    transformer = transformer.sort(list(transformer.df.columns))
+                else:
+                    transformer = transformer.sort(columns, op.get("ascending", True))
+            elif op_type == "limit":
+                transformer = transformer.limit(op["n"])
+            elif op_type == "groupby":
+                # Groupby not yet supported in this implementation
+                raise ValueError("Groupby operation is not supported yet")
             else:
-                # Sort by all columns
-                transformer = transformer.sort(
-                    list(df.columns), op.get("ascending", True)
-                )
-        elif op_type == "limit":
-            transformer = transformer.limit(op["n"])
-        elif op_type == "groupby":
-            # Groupby needs to be combined with aggregations
-            # For now, we'll just note the groupby operation
-            pass
+                raise ValueError(f"Unsupported transformation operation: {op_type}")
 
-    return transformer.get_dataframe()
+        return transformer.get_dataframe()
+    except ValueError as exc:
+        raise TransformError(str(exc)) from exc

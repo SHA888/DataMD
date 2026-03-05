@@ -40,10 +40,12 @@ try:
     from .cache import get_cache_manager
     from .config import get_config
     from .data_transform import apply_transformations
+    from .exceptions import FileResolutionError
 except (ImportError, ValueError):  # pragma: no cover
     # When running directly
     from cache import get_cache_manager
     from data_transform import apply_transformations
+    from exceptions import FileResolutionError
 
     from config import get_config
 
@@ -84,10 +86,10 @@ def resolve_secure_path(file_path, base_dir=None):
             resolved_path.relative_to(base_path)
         except ValueError:
             error_msg = (
-                f"Access to path outside of working directory is not allowed: "
+                "Access to path outside of working directory is not allowed: "
                 f"{file_path}"
             )
-            raise ValueError(error_msg)
+            raise FileResolutionError(error_msg)
     else:
         # Handle relative paths
         resolved_path = (base_path / target_path).resolve()
@@ -95,11 +97,11 @@ def resolve_secure_path(file_path, base_dir=None):
             # Check if the resolved path is within the base directory
             resolved_path.relative_to(base_dir)
         except ValueError:
-            raise ValueError(f"Path traversal attempt detected: {file_path}")
+            raise FileResolutionError(f"Path traversal attempt detected: {file_path}")
 
     # Check if file exists
     if not resolved_path.exists():
-        raise FileNotFoundError(f"File not found: {file_path}")
+        raise FileResolutionError(f"File not found: {file_path}")
 
     return resolved_path
 
