@@ -23,9 +23,11 @@ try:
     # When installed as a package (CLI path)
     from .config import get_config
     from .datamd_ext import DataMDExtension
+    from .exceptions import ShortcodeError
 except (ImportError, ValueError):  # pragma: no cover
     # When running the script directly (python python_implementation/process_dmd.py)
     from datamd_ext import DataMDExtension
+    from exceptions import ShortcodeError
 
     from config import get_config
 
@@ -38,6 +40,7 @@ def process_dmd_file(
     verbose=False,
     chunk_size=None,
     max_memory_mb=None,
+    strict=False,
 ):
     """Process a single .dmd file and convert to specified format"""
 
@@ -52,9 +55,18 @@ def process_dmd_file(
     with open(input_file, "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Process with DataMD extension
-    md = markdown.Markdown(extensions=[DataMDExtension()])
-    html_content = md.convert(content)
+    try:
+        # Process with DataMD extension, include source path for contextual errors
+        md = markdown.Markdown(extensions=[DataMDExtension(source_path=input_file)])
+        html_content = md.convert(content)
+    except Exception as exc:
+        logger.error(
+            "Shortcode processing failed",
+            extra={"input_file": input_file, "error": str(exc)},
+        )
+        if strict:
+            raise
+        return False
 
     # Generate output filename if not provided
     if output_file is None:
@@ -156,6 +168,7 @@ def process_directory(
     verbose=False,
     chunk_size=None,
     max_memory_mb=None,
+    strict=False,
 ):
     """Process all .dmd files in a directory"""
     directory = Path(directory)
@@ -170,20 +183,27 @@ def process_directory(
         extra={"count": len(dmd_files), "directory": str(directory)},
     )
 
+    success = True
     for dmd_file in dmd_files:
         if verbose:
             logger.info(
                 "Processing file in directory",
                 extra={"file": dmd_file.name, "directory": str(directory)},
             )
-        process_dmd_file(
+        ok = process_dmd_file(
             str(dmd_file),
             output_format=output_format,
             style_options=style_options,
             verbose=verbose,
             chunk_size=chunk_size,
             max_memory_mb=max_memory_mb,
+            strict=strict,
         )
+        if not ok:
+            success = False
+            if strict:
+                break
+    return success
 
 
 def watch_path(
@@ -193,6 +213,7 @@ def watch_path(
     verbose=False,
     chunk_size=None,
     max_memory_mb=None,
+    strict=False,
 ):
     """Watch a file or directory for changes and reprocess .dmd files."""
     try:
@@ -247,6 +268,7 @@ def watch_path(
                         verbose=verbose,
                         chunk_size=chunk_size,
                         max_memory_mb=max_memory_mb,
+                        strict=strict,
                     )
 
     logger.info(
@@ -310,6 +332,11 @@ def main(args=None):
         type=int,
         help="Set maximum memory usage in MB (default: 100)",
     )
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit non-zero on any shortcode failure",
+    )
 
     parsed_args = parser.parse_args(args)
 
@@ -359,50 +386,66 @@ def main(args=None):
                 "Custom styles applied", extra={"styles": list(style_options.keys())}
             )
 
-    if is_file:
-        if not parsed_args.input.endswith(".dmd"):
-            logger.error("Input file must have .dmd extension")
+    try:
+        success = True
+
+        if is_file:
+            if not parsed_args.input.endswith(".dmd"):
+                logger.error("Input file must have .dmd extension")
+                sys.exit(1)
+            success = process_dmd_file(
+                parsed_args.input,
+                parsed_args.output,
+                parsed_args.format,
+                style_options,
+                parsed_args.verbose,
+                parsed_args.chunk_size,
+                parsed_args.max_memory,
+                parsed_args.strict,
+            )
+            if parsed_args.watch:
+                watch_path(
+                    parsed_args.input,
+                    parsed_args.format,
+                    style_options,
+                    parsed_args.verbose,
+                    parsed_args.chunk_size,
+                    parsed_args.max_memory,
+                    parsed_args.strict,
+                )
+        elif is_dir:
+            success = process_directory(
+                parsed_args.input,
+                parsed_args.format,
+                style_options,
+                parsed_args.verbose,
+                parsed_args.chunk_size,
+                parsed_args.max_memory,
+                parsed_args.strict,
+            )
+            if parsed_args.watch:
+                watch_path(
+                    parsed_args.input,
+                    parsed_args.format,
+                    style_options,
+                    parsed_args.verbose,
+                    parsed_args.chunk_size,
+                    parsed_args.max_memory,
+                    parsed_args.strict,
+                )
+        else:
+            logger.error(
+                "Input path is not a valid file or directory",
+                extra={"input": parsed_args.input},
+            )
             sys.exit(1)
-        process_dmd_file(
-            parsed_args.input,
-            parsed_args.output,
-            parsed_args.format,
-            style_options,
-            parsed_args.verbose,
-            parsed_args.chunk_size,
-            parsed_args.max_memory,
-        )
-        if parsed_args.watch:
-            watch_path(
-                parsed_args.input,
-                parsed_args.format,
-                style_options,
-                parsed_args.verbose,
-                parsed_args.chunk_size,
-                parsed_args.max_memory,
-            )
-    elif is_dir:
-        process_directory(
-            parsed_args.input,
-            parsed_args.format,
-            style_options,
-            parsed_args.verbose,
-            parsed_args.chunk_size,
-            parsed_args.max_memory,
-        )
-        if parsed_args.watch:
-            watch_path(
-                parsed_args.input,
-                parsed_args.format,
-                style_options,
-                parsed_args.verbose,
-                parsed_args.chunk_size,
-                parsed_args.max_memory,
-            )
-    else:
+
+        if not success:
+            sys.exit(1)
+    except ShortcodeError as exc:
         logger.error(
-            "Input path is not a valid file or directory",
-            extra={"input": parsed_args.input},
+            "Shortcode error during processing",
+            extra={"input": parsed_args.input, "error": str(exc)},
         )
         sys.exit(1)
 

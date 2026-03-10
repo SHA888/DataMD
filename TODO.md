@@ -101,9 +101,9 @@ These tasks were completed in earlier development phases. Preserved here for ref
 - [x] Replace all `print()` calls with structured logging (`logging` module) in `process_dmd_file`
 - [x] Define custom exception hierarchy: `DataMDError`, `ShortcodeError`, `FileResolutionError`, `TransformError`
 - [x] Ensure every shortcode handler propagates errors to the caller (no silent swallowing)
-- [ ] Add contextual error messages with file path, line number, and shortcode text
-- [ ] Surface errors to CLI output with clear user-facing messages
-- [ ] Add `--strict` CLI flag that exits non-zero on any shortcode failure
+- [x] Add contextual error messages with file path, line number, and shortcode text
+- [x] Surface errors to CLI output with clear user-facing messages
+- [x] Add `--strict` CLI flag that exits non-zero on any shortcode failure
 
 ### Large File Handling (F-009)
 - [ ] Profile current memory usage with files at 10MB, 50MB, 100MB

@@ -487,9 +487,13 @@ def process_large_excel(
 
 
 class DataMDPreprocessor(Preprocessor):
+    def __init__(self, md, source_path=None):
+        super().__init__(md)
+        self.source_path = source_path or "<unknown>"
+
     def run(self, lines):
         new_lines = []
-        for line in lines:
+        for idx, line in enumerate(lines, start=1):
             # Match shortcode pattern: {{ command "file" arg1 arg2 }}
             match = re.match(r'\{\{\s*(\w+)\s+"([^"]+)"(?:\s+([^}]*))?\s*\}\}', line)
             if match:
@@ -1388,11 +1392,15 @@ class DataMDPreprocessor(Preprocessor):
                             f"Unknown Data Markdown (DataMD) command: {cmd}"
                         )
 
-                except ShortcodeError:
-                    raise
+                except ShortcodeError as e:
+                    shortcode_text = line.strip()
+                    context = f"Error in shortcode at {self.source_path}:{idx}: {shortcode_text}"
+                    raise ShortcodeError(f"{context}: {e}") from e
                 except Exception as e:
+                    shortcode_text = line.strip()
+                    context = f"Error in shortcode at {self.source_path}:{idx}: {shortcode_text}"
                     raise ShortcodeError(
-                        f"Error processing {cmd} file {file_path}: {str(e)}"
+                        f"{context}: {cmd} file {file_path}: {str(e)}"
                     ) from e
 
                 continue
@@ -1403,8 +1411,14 @@ class DataMDPreprocessor(Preprocessor):
 
 
 class DataMDExtension(Extension):
+    def __init__(self, **kwargs):
+        self.source_path = kwargs.pop("source_path", None)
+        super().__init__(**kwargs)
+
     def extendMarkdown(self, md):
-        md.preprocessors.register(DataMDPreprocessor(md), "datamd", 175)
+        md.preprocessors.register(
+            DataMDPreprocessor(md, source_path=self.source_path), "datamd", 175
+        )
 
 
 def makeExtension(**kwargs):
