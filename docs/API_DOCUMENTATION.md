@@ -1,5 +1,7 @@
 # Data Markdown (DataMD) API Documentation
 
+> Note: The current API is Python-based. A Rust implementation with optional PyO3 bindings is planned. See `docs/MIGRATION_FROM_PYTHON.md` and `docs/RUST_ARCHITECTURE.md` for migration details.
+
 This document provides comprehensive API documentation for all Python modules and public functions in the DataMD project.
 
 ## Table of Contents

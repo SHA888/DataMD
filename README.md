@@ -1,8 +1,8 @@
 # Data Markdown (DataMD)
 
-DataMD is an enhanced Markdown format that allows embedding and processing various data formats directly within Markdown documents using the `.dmd` file extension.
+DataMD is an enhanced Markdown format that allows embedding and processing various data formats directly within Markdown documents using the `.dmd` file extension. A Rust implementation is planned to deliver higher performance and a single-binary distribution while preserving full `.dmd` compatibility and offering optional Python bindings.
 
-## Features
+## Features (Current Python Engine)
 
 DataMD supports embedding and processing:
 
@@ -63,7 +63,14 @@ python python_implementation/process_dmd.py report.dmd -v --style-body "font-fam
 ### Large File Handling
 Optimized processing for large data files with memory management.
 
-## Installation
+## Migration to Rust (Planned)
+
+- Target: 10x performance on large files, safer concurrency, single binary
+- Backward compatibility: `.dmd` syntax and outputs remain the same
+- Python interoperability: PyO3 bindings planned for programmatic use
+- Timeline and phases: see `docs/MIGRATION_FROM_PYTHON.md` and `docs/RUST_ARCHITECTURE.md`
+
+## Installation (Python engine)
 
 ```bash
 pip install -r requirements.txt
@@ -74,7 +81,7 @@ For live rebuilds:
 pip install .[watch]
 ```
 
-## Usage
+## Usage (Python engine)
 
 ### Process a single file:
 ```bash
@@ -98,19 +105,12 @@ python python_implementation/process_dmd.py report.dmd -v --style-body "font-fam
 
 ## Advanced Usage
 
-For advanced features and complex use cases, see the [Advanced Usage Guide](docs/ADVANCED_USAGE.md).
-
-## API Documentation
-
-For developers looking to extend or integrate with DataMD, see the [API Documentation](docs/API_DOCUMENTATION.md).
-
-## Extending DataMD
-
-To add support for new file formats or create custom shortcode handlers, see the [Extending Shortcodes Guide](docs/EXTENDING_SHORTCODES.md).
-
-## Syntax
-
-See [SYNTAX.md](docs/SYNTAX.md) for detailed syntax reference.
+- Advanced features: [docs/ADVANCED_USAGE.md](docs/ADVANCED_USAGE.md)
+- Syntax reference: [docs/SYNTAX.md](docs/SYNTAX.md)
+- API docs (Python): [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md)
+- Extending shortcodes: [docs/EXTENDING_SHORTCODES.md](docs/EXTENDING_SHORTCODES.md)
+- Migration guide: [docs/MIGRATION_FROM_PYTHON.md](docs/MIGRATION_FROM_PYTHON.md)
+- Rust architecture outline: [docs/RUST_ARCHITECTURE.md](docs/RUST_ARCHITECTURE.md)
 
 ## Examples
 

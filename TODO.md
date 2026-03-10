@@ -105,6 +105,16 @@ These tasks were completed in earlier development phases. Preserved here for ref
 - [x] Surface errors to CLI output with clear user-facing messages
 - [x] Add `--strict` CLI flag that exits non-zero on any shortcode failure
 
+### Python → Rust Migration
+- [ ] Phase 1: Foundation (config, security, errors, logging, Rust workspace init)
+- [ ] Phase 2: Data processing (CSV/JSON/Excel, transforms, caching, streaming)
+- [ ] Phase 3: Documents (PDF text/table, OCR, video thumbnails)
+- [ ] Phase 4: Visualization (charts, HTML/Markdown rendering)
+- [ ] Phase 5: CLI & integration (flags parity, watch mode, batch, progress)
+- [ ] Phase 6: Python bindings (PyO3/maturin)
+- [ ] Phase 7: Testing & documentation (parity tests, benchmarks, docs refresh)
+- [ ] Phase 8: Release (CI/CD, binaries, crates.io/PyPI, deprecation timeline)
+
 ### Large File Handling (F-009)
 - [ ] Profile current memory usage with files at 10MB, 50MB, 100MB
 - [ ] Implement generator-based CSV reading (chunked `pandas.read_csv` or raw `csv.reader`)
@@ -270,7 +280,8 @@ These tasks were completed in earlier development phases. Preserved here for ref
 
 | Priority | Area | Status |
 |---|---|---|
-| P0 | Error Handling & Logging | 🔴 Not Started |
+| P0 | Error Handling & Logging | 🟢 Done |
+| P0 | Python → Rust Migration | 🔴 Not Started |
 | P0 | Large File Handling | 🔴 Not Started |
 | P0 | Security Hardening | 🟡 Partial (F-006, F-008 done) |
 | P1 | Test Coverage | 🔴 Not Started |
