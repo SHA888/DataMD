@@ -113,16 +113,16 @@ These tasks were completed in earlier development phases. Preserved here for ref
 
 ## P0 — Critical Path (Rust Migration)
 
-### Phase 1: Foundation & Core (Weeks 1-2) 🔴
+### Phase 1: Foundation & Core (Weeks 1-2) ✅
 **Goal**: Set up Rust project with core infrastructure
 
-- [ ] Initialize Cargo workspace with proper structure
-- [ ] Set up error handling with `thiserror` and `anyhow`
-- [ ] Implement configuration system (serde for JSON/TOML)
-- [ ] Port security module (path validation, sanitization)
-- [ ] Port custom exception hierarchy to Rust error types
-- [ ] Set up logging with `tracing` or `env_logger`
-- [ ] Create comprehensive unit tests for foundation
+- [x] Initialize Cargo workspace with proper structure
+- [x] Set up error handling with `thiserror` and `anyhow`
+- [x] Implement configuration system (serde for JSON/TOML)
+- [x] Port security module (path validation, sanitization)
+- [x] Port custom exception hierarchy to Rust error types
+- [x] Set up logging with `tracing` or `env_logger`
+- [x] Create comprehensive unit tests for foundation
 
 **Key Crates**: `thiserror`, `anyhow`, `serde`, `serde_json`, `toml`, `regex`, `tracing`
 

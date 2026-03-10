@@ -1,0 +1,20 @@
+[package]
+name = "datamd-core"
+version = "0.1.0"
+edition = "2021"
+authors = ["DataMD Contributors"]
+license = "MIT"
+description = "Core library for DataMD Rust implementation"
+
+[dependencies]
+anyhow = { workspace = true }
+thiserror = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+toml = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true, features = ["fmt", "env-filter"] }
+regex = { workspace = true }
+
+[dev-dependencies]
+tempfile = "3"

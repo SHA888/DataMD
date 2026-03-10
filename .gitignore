@@ -43,6 +43,10 @@ Thumbs.db
 /dist/
 /build/
 *.egg-info/
+target/
+Cargo.lock
+/crates/*/target/
+/.cargo/
 
 # Data files
 data/*~
