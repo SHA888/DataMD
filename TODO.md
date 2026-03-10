@@ -100,7 +100,7 @@ These tasks were completed in earlier development phases. Preserved here for ref
 ### Error Handling & Logging
 - [x] Replace all `print()` calls with structured logging (`logging` module) in `process_dmd_file`
 - [x] Define custom exception hierarchy: `DataMDError`, `ShortcodeError`, `FileResolutionError`, `TransformError`
-- [ ] Ensure every shortcode handler propagates errors to the caller (no silent swallowing)
+- [x] Ensure every shortcode handler propagates errors to the caller (no silent swallowing)
 - [ ] Add contextual error messages with file path, line number, and shortcode text
 - [ ] Surface errors to CLI output with clear user-facing messages
 - [ ] Add `--strict` CLI flag that exits non-zero on any shortcode failure

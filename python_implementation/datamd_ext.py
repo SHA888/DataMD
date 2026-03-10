@@ -40,12 +40,12 @@ try:
     from .cache import get_cache_manager
     from .config import get_config
     from .data_transform import apply_transformations
-    from .exceptions import FileResolutionError
+    from .exceptions import FileResolutionError, ShortcodeError
 except (ImportError, ValueError):  # pragma: no cover
     # When running directly
     from cache import get_cache_manager
     from data_transform import apply_transformations
-    from exceptions import FileResolutionError
+    from exceptions import FileResolutionError, ShortcodeError
 
     from config import get_config
 
@@ -501,9 +501,8 @@ class DataMDPreprocessor(Preprocessor):
                     # Resolve the file path securely
                     try:
                         secure_path = resolve_secure_path(file_path)
-                    except (ValueError, FileNotFoundError) as e:
-                        new_lines.append(f"Error: {str(e)}")
-                        continue
+                    except FileResolutionError as e:
+                        raise ShortcodeError(str(e)) from e
 
                     if cmd == "csv":
                         sep = sanitize_string_input(
@@ -665,8 +664,7 @@ class DataMDPreprocessor(Preprocessor):
                     elif cmd in ["xlsx", "xls", "xlsm", "ods"]:
                         # Check if this format is enabled
                         if not config.is_feature_enabled("excel_support"):
-                            new_lines.append("Error: Excel processing is disabled")
-                            continue
+                            raise ShortcodeError("Excel processing is disabled")
 
                         sheet = sanitize_sheet_name(args[0] if args else 0)
                         transform = sanitize_string_input(
@@ -750,8 +748,7 @@ class DataMDPreprocessor(Preprocessor):
                     elif cmd == "pdf":
                         # Check if PDF processing is enabled
                         if not config.is_feature_enabled("pdf_processing"):
-                            new_lines.append("Error: PDF processing is disabled")
-                            continue
+                            raise ShortcodeError("PDF processing is disabled")
 
                         pages = sanitize_string_input(
                             args[0] if args else "all", max_length=20
@@ -908,8 +905,7 @@ class DataMDPreprocessor(Preprocessor):
                     elif cmd == "image_ocr":
                         # Check if OCR is enabled
                         if not config.is_feature_enabled("ocr_enabled"):
-                            new_lines.append("Error: OCR processing is disabled")
-                            continue
+                            raise ShortcodeError("OCR processing is disabled")
 
                         lang = sanitize_language_code(
                             args[0] if args else config.get_default_ocr_language()
@@ -929,8 +925,7 @@ class DataMDPreprocessor(Preprocessor):
                     elif cmd == "video":
                         # Check if video support is enabled
                         if not config.is_feature_enabled("video_support"):
-                            new_lines.append("Error: Video processing is disabled")
-                            continue
+                            raise ShortcodeError("Video processing is disabled")
 
                         width = sanitize_numeric_input(
                             args[0] if len(args) > 0 else "640",
@@ -966,23 +961,17 @@ class DataMDPreprocessor(Preprocessor):
                     elif cmd == "video_thumb":
                         # Check if video support is enabled
                         if not config.is_feature_enabled("video_support"):
-                            new_lines.append("Error: Video processing is disabled")
-                            continue
+                            raise ShortcodeError("Video processing is disabled")
 
                         # Check if moviepy is available
                         if not MOVIEPY_AVAILABLE:
-                            new_lines.append(
-                                "Error: moviepy not available for video "
-                                + "thumbnail generation"
+                            raise ShortcodeError(
+                                "moviepy not available for video thumbnail generation"
                             )
-                            continue
 
                         # Extract time parameter (required)
                         if not args:
-                            new_lines.append(
-                                "Error: video_thumb requires time parameter"
-                            )
-                            continue
+                            raise ShortcodeError("video_thumb requires time parameter")
 
                         try:
                             time = sanitize_numeric_input(args[0], min_val=0, default=0)
@@ -1096,11 +1085,9 @@ class DataMDPreprocessor(Preprocessor):
                                     )
                                 else:
                                     error_msg = (
-                                        "Error: Unsupported file format for chart "
-                                        "generation"
+                                        "Unsupported file format for chart generation"
                                     )
-                                    new_lines.append(error_msg)
-                                    continue
+                                    raise ShortcodeError(error_msg)
 
                                 # Apply transformations if specified in options
                                 if "transform" in options:
@@ -1109,18 +1096,14 @@ class DataMDPreprocessor(Preprocessor):
                                 # Validate columns
                                 if x_column and x_column not in df.columns:
                                     error_msg = (
-                                        f"Error: X column '{x_column}' not found "
-                                        f"in data"
+                                        f"X column '{x_column}' not found in data"
                                     )
-                                    new_lines.append(error_msg)
-                                    continue
+                                    raise ShortcodeError(error_msg)
                                 if y_column and y_column not in df.columns:
                                     error_msg = (
-                                        f"Error: Y column '{y_column}' not found "
-                                        f"in data"
+                                        f"Y column '{y_column}' not found in data"
                                     )
-                                    new_lines.append(error_msg)
-                                    continue
+                                    raise ShortcodeError(error_msg)
 
                                 # Generate chart
                                 plt.figure(figsize=(10, 6))
@@ -1164,12 +1147,9 @@ class DataMDPreprocessor(Preprocessor):
                                                 kind="pie", ax=plt.gca(), ylabel=""
                                             )
                                     else:
-                                        error_msg = (
-                                            "Error: Pie charts require a Y column"
-                                        )
-                                        new_lines.append(error_msg)
+                                        error_msg = "Pie charts require a Y column"
                                         plt.close()
-                                        continue
+                                        raise ShortcodeError(error_msg)
                                 elif chart_type == "scatter":
                                     if x_column and y_column:
                                         df.plot(
@@ -1180,12 +1160,10 @@ class DataMDPreprocessor(Preprocessor):
                                         )
                                     else:
                                         error_msg = (
-                                            "Error: Scatter plots require both X "
-                                            "and Y columns"
+                                            "Scatter plots require both X and Y columns"
                                         )
-                                        new_lines.append(error_msg)
                                         plt.close()
-                                        continue
+                                        raise ShortcodeError(error_msg)
                                 elif chart_type == "histogram":
                                     if y_column:
                                         df[y_column].plot(kind="hist", ax=plt.gca())
@@ -1364,12 +1342,10 @@ class DataMDPreprocessor(Preprocessor):
                                             )
                                         else:
                                             error_msg = (
-                                                "Error: No numeric columns found "
-                                                "for histogram"
+                                                "No numeric columns found for histogram"
                                             )
-                                            new_lines.append(error_msg)
                                             plt.close()
-                                            continue
+                                            raise ShortcodeError(error_msg)
 
                                 # Apply grid if requested
                                 if options.get("grid", False):
@@ -1391,12 +1367,15 @@ class DataMDPreprocessor(Preprocessor):
                                 )
 
                                 cached_chart_path = str(chart_path)
+                            except ShortcodeError:
+                                if plt:
+                                    plt.close()
+                                raise
                             except Exception as e:
                                 if plt:
                                     plt.close()
                                 error_msg = f"Error generating chart: {str(e)}"
-                                new_lines.append(error_msg)
-                                continue
+                                raise ShortcodeError(error_msg) from e
 
                         # Generate markdown image tag
                         alt_text = f"{chart_type.capitalize()} chart"
@@ -1405,14 +1384,16 @@ class DataMDPreprocessor(Preprocessor):
                         new_lines.append(f"![{alt_text}]({cached_chart_path})")
 
                     else:
-                        new_lines.append(
+                        raise ShortcodeError(
                             f"Unknown Data Markdown (DataMD) command: {cmd}"
                         )
 
+                except ShortcodeError:
+                    raise
                 except Exception as e:
-                    new_lines.append(
+                    raise ShortcodeError(
                         f"Error processing {cmd} file {file_path}: {str(e)}"
-                    )
+                    ) from e
 
                 continue
 
