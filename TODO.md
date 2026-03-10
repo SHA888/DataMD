@@ -429,14 +429,14 @@ These tasks were completed in earlier development phases. Preserved here for ref
 | Phase | Timeline | Goal | Status |
 |---|---|---|---|
 | Phase 0 | Complete | Planning & Documentation | ✅ Done |
-| Phase 1 | Weeks 1-2 | Foundation & Core | 🔴 Not Started |
+| Phase 1 | Weeks 1-2 | Foundation & Core | ✅ Done |
 | Phase 2 | Weeks 3-4 | Data Processing | 🔴 Not Started |
-| Phase 3 | Weeks 5-6 | Document Processing | � Not Started |
+| Phase 3 | Weeks 5-6 | Document Processing | 🔴 Not Started |
 | Phase 4 | Week 7 | Visualization & Rendering | 🔴 Not Started |
 | Phase 5 | Week 8 | CLI & Integration | 🔴 Not Started |
 | Phase 6 | Week 9 | Python Bindings (Optional) | 🟡 Planned |
 | Phase 7 | Week 10 | Testing & Documentation | 🔴 Not Started |
-| Phase 8 | Week 11 | Release & Deployment | � Not Started |
+| Phase 8 | Week 11 | Release & Deployment | 🔴 Not Started |
 
 ### Python Version Status (Maintenance Mode)
 
@@ -445,7 +445,7 @@ These tasks were completed in earlier development phases. Preserved here for ref
 | Error Handling & Logging | ✅ Complete | Serves as spec for Rust |
 | Large File Handling | 🟡 Deferred | Will be addressed in Rust Phase 2 |
 | Security Hardening | 🟡 Partial | F-006, F-008 done; rest in Rust Phase 1 |
-| Test Coverage | � Baseline | Existing tests serve as specification |
+| Test Coverage | 🟡 Baseline | Existing tests serve as specification |
 | Type Safety | 🟡 Deferred | Rust has compile-time type safety |
 | CLI Improvements | 🟡 Partial | F-011 done; modern CLI in Rust Phase 5 |
-| Documentation | � Updated | Migration docs added; full update in Rust Phase 7 |
+| Documentation | 🟢 Updated | Migration docs added; full update in Rust Phase 7 |
